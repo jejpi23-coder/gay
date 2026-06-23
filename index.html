@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14171F">
+<meta name="description" content="Fiszki i quiz przygotowujące do obrony magisterskiej — Informatyka, specjalność Systemy analiz danych (Data Science), Politechnika Lubelska.">
+<title>Obrona DS — fiszki i quiz przed obroną magisterską</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14171F; --surface:#1B202A; --surface2:#222936; --raised:#2A323F;
+    --border:#2E3744; --border-soft:#262E3A;
+    --text:#E7EAF0; --muted:#97A1B0; --faint:#6B7585;
+    --accent:#EBB261; --accent-dim:#7a5e34; --accent-ink:#1a1206;
+    --teal:#63B6AB; --good:#74CF96; --good-ink:#0d2417; --review:#E68298; --review-ink:#2a0e15;
+    --shadow:0 18px 40px -22px rgba(0,0,0,.7);
+    --r:16px;
+    --display:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,'SFMono-Regular',monospace;
+  }
+  html[data-theme="light"]{
+    --bg:#EAEDF2; --surface:#FFFFFF; --surface2:#F3F5F8; --raised:#FFFFFF;
+    --border:#D8DEE7; --border-soft:#E4E9F0;
+    --text:#1B2330; --muted:#5C6677; --faint:#8a94a3;
+    --accent:#B9772A; --accent-dim:#e3cba3; --accent-ink:#fff6e9;
+    --teal:#2E8377; --good:#2E8B57; --good-ink:#fff; --review:#C24B65; --review-ink:#fff;
+    --shadow:0 16px 34px -24px rgba(40,55,80,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--body);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    background-image:radial-gradient(1100px 480px at 78% -8%, color-mix(in srgb,var(--accent) 9%, transparent), transparent 70%);
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:22px 18px 64px}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+
+  header{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+  .brand{flex:1;min-width:0}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,6.4vw,38px);letter-spacing:-.02em;line-height:1.02;margin:5px 0 4px}
+  .sub{color:var(--muted);font-size:13.5px}
+  .iconbtn{width:40px;height:40px;border-radius:11px;background:var(--surface);border:1px solid var(--border);
+    display:grid;place-items:center;font-size:17px;color:var(--muted);transition:.18s;flex:none}
+  .iconbtn:hover{color:var(--text);border-color:var(--accent);transform:translateY(-1px)}
+
+  .ring{transform:rotate(-90deg)}
+  .ring .track{stroke:var(--border);}
+  .ring .fill{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .6s cubic-bezier(.3,.9,.3,1)}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+  .panel + .panel{margin-top:16px}
+
+  .status{display:flex;align-items:center;gap:18px}
+  .status .label{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .status .big{font-family:var(--display);font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.05}
+  .status .meta{color:var(--muted);font-size:13px;margin-top:2px}
+  .ringwrap{position:relative;flex:none}
+  .ringwrap .pct{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:15px}
+
+  .head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:2px 2px 12px}
+  .head h2{font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:.01em}
+  .head .hint{font-size:12px;color:var(--faint)}
+
+  .topics{display:grid;gap:9px}
+  .chip{display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+    background:var(--surface2);border:1px solid var(--border-soft);border-radius:12px;padding:11px 13px;transition:.16s}
+  .chip:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .chip[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%, var(--surface2))}
+  .chip .code{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--accent-ink);background:var(--accent);
+    padding:3px 7px;border-radius:6px;flex:none;min-width:46px;text-align:center;letter-spacing:.04em}
+  .chip[aria-pressed="false"] .code{background:var(--raised);color:var(--muted);border:1px solid var(--border)}
+  .chip .nm{flex:1;min-width:0;font-size:14px;font-weight:500}
+  .chip .ct{font-family:var(--mono);font-size:11px;color:var(--faint);flex:none}
+  .chip .tick{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);flex:none;display:grid;place-items:center;font-size:12px;color:transparent}
+  .chip[aria-pressed="true"] .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+  .selrow{display:flex;gap:10px;margin-top:12px}
+  .selrow button{flex:1;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted);
+    background:var(--surface2);border:1px solid var(--border-soft);border-radius:9px;padding:9px;transition:.15s}
+  .selrow button:hover{color:var(--text);border-color:var(--accent)}
+
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mode{display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:14px;border-radius:12px;
+    background:var(--surface2);border:1px solid var(--border-soft);transition:.16s}
+  .mode:hover{transform:translateY(-1px);border-color:var(--accent)}
+  .mode[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface2))}
+  .mode .mt{font-family:var(--display);font-weight:600;font-size:15px}
+  .mode .md{font-size:12px;color:var(--muted)}
+  .mode .ic{font-size:18px;margin-bottom:2px}
+
+  .cta{display:block;width:100%;margin-top:16px;background:var(--accent);color:var(--accent-ink);
+    font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.01em;padding:15px;border-radius:13px;transition:.16s}
+  .cta:hover{filter:brightness(1.06);transform:translateY(-1px)}
+  .cta:disabled{opacity:.4;cursor:not-allowed;transform:none;filter:none}
+
+  .sessbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .ghost{font-family:var(--mono);font-size:12px;color:var(--muted);background:var(--surface);border:1px solid var(--border);
+    border-radius:10px;padding:8px 12px;transition:.15s}
+  .ghost:hover{color:var(--text);border-color:var(--accent)}
+  .prog{flex:1}
+  .prog .bar{height:7px;border-radius:5px;background:var(--border);overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:var(--accent);border-radius:5px;transition:width .35s ease}
+  .prog .cnt{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:5px;display:flex;justify-content:space-between}
+
+  .scene{perspective:1600px}
+  .card{position:relative;width:100%;min-height:340px;cursor:pointer;transition:transform .5s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+  .card.flip{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column}
+  .face .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;display:flex;justify-content:space-between}
+  .face.front{justify-content:center}
+  .face.front .q{font-family:var(--display);font-weight:600;font-size:clamp(19px,4.6vw,25px);line-height:1.28;letter-spacing:-.01em}
+  .face .fliphint{margin-top:auto;font-size:12px;color:var(--faint);padding-top:14px}
+  .face.back{transform:rotateY(180deg);overflow-y:auto}
+  .face.back .a{font-size:15px;color:var(--text);line-height:1.62}
+  .face .tag b{color:var(--teal)}
+
+  .deckctrl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .judge{font-family:var(--display);font-weight:600;font-size:15px;padding:14px;border-radius:13px;border:1px solid var(--border);transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .judge.review{background:color-mix(in srgb,var(--review) 16%,var(--surface));border-color:color-mix(in srgb,var(--review) 45%,var(--border));color:var(--review)}
+  .judge.know{background:color-mix(in srgb,var(--good) 16%,var(--surface));border-color:color-mix(in srgb,var(--good) 45%,var(--border));color:var(--good)}
+  .judge:hover{transform:translateY(-1px);filter:brightness(1.08)}
+  .navrow{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px}
+  .navrow button{font-family:var(--mono);font-size:12px;color:var(--muted);padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);transition:.15s}
+  .navrow button:hover:not(:disabled){color:var(--text);border-color:var(--accent)}
+  .navrow button:disabled{opacity:.35;cursor:not-allowed}
+  .navrow .mid{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center}
+
+  .qcard{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px 22px 20px;box-shadow:var(--shadow)}
+  .qcard .qtag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between;margin-bottom:14px}
+  .qcard .q{font-family:var(--display);font-weight:600;font-size:clamp(18px,4.3vw,22px);line-height:1.32;margin-bottom:18px}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--surface2);
+    border:1px solid var(--border-soft);border-radius:12px;padding:13px 14px;font-size:14.5px;transition:.14s}
+  .opt:hover:not([disabled]){border-color:var(--accent);transform:translateY(-1px)}
+  .opt .key{font-family:var(--mono);font-size:12px;font-weight:600;width:24px;height:24px;border-radius:7px;flex:none;
+    display:grid;place-items:center;background:var(--raised);border:1px solid var(--border);color:var(--muted)}
+  .opt[disabled]{cursor:default}
+  .opt.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 15%,var(--surface2))}
+  .opt.correct .key{background:var(--good);color:var(--good-ink);border-color:var(--good)}
+  .opt.wrong{border-color:var(--review);background:color-mix(in srgb,var(--review) 15%,var(--surface2))}
+  .opt.wrong .key{background:var(--review);color:var(--review-ink);border-color:var(--review)}
+  .explain{margin-top:16px;padding:13px 15px;border-radius:12px;background:var(--surface2);border:1px solid var(--border-soft);font-size:13.5px;color:var(--muted);line-height:1.55}
+  .explain b{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+  .explain.ok b{color:var(--good)} .explain.no b{color:var(--review)}
+  .qnext{display:block;width:100%;margin-top:16px;background:var(--accent);color:var(--accent-ink);font-family:var(--display);font-weight:700;font-size:15px;padding:14px;border-radius:13px;transition:.15s}
+  .qnext:hover{filter:brightness(1.06);transform:translateY(-1px)}
+
+  .result{text-align:center;padding:30px 20px}
+  .result .score{font-family:var(--display);font-weight:700;font-size:54px;letter-spacing:-.03em;line-height:1}
+  .result .score small{font-size:24px;color:var(--muted);font-weight:600}
+  .result .verdict{font-family:var(--display);font-size:19px;font-weight:600;margin:10px 0 4px}
+  .result .rsub{color:var(--muted);font-size:14px}
+  .breakdown{margin-top:22px;text-align:left;display:grid;gap:8px}
+  .brow{display:flex;align-items:center;gap:12px;font-size:13px}
+  .brow .bc{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--accent);min-width:46px}
+  .brow .bn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+  .brow .bb{width:90px;height:6px;border-radius:4px;background:var(--border);overflow:hidden;flex:none}
+  .brow .bb i{display:block;height:100%;background:var(--teal)}
+  .brow .bv{font-family:var(--mono);font-size:11px;color:var(--faint);min-width:42px;text-align:right}
+  .resbtns{display:grid;gap:10px;margin-top:22px}
+
+  .foot{margin-top:30px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .hidden{display:none!important}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--raised);border:1px solid var(--border);color:var(--text);font-size:13px;padding:10px 16px;
+    border-radius:11px;box-shadow:var(--shadow);transition:.25s;pointer-events:none;z-index:50}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:420px){ .status .big{font-size:25px} }
+  @media (prefers-reduced-motion:reduce){
+    *{transition-duration:.001ms!important}
+    .card{transition:none;transform-style:flat}
+    .card.flip{transform:none}
+    .face{position:relative;backface-visibility:visible}
+    .face.back{transform:none}
+    .card:not(.flip) .face.back{display:none}
+    .card.flip .face.front{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="eyebrow">Obrona magisterska · Data Science</div>
+      <h1>Obrona&nbsp;DS</h1>
+      <div class="sub">Fiszki i quiz · Informatyka, spec. Systemy analiz danych · Politechnika Lubelska</div>
+    </div>
+    <button class="iconbtn" id="themeBtn" title="Zmień motyw" aria-label="Zmień motyw">◐</button>
+  </header>
+
+  <!-- HOME -->
+  <main id="home">
+    <section class="panel">
+      <div class="status">
+        <div class="ringwrap">
+          <svg class="ring" width="78" height="78" viewBox="0 0 78 78" aria-hidden="true">
+            <circle class="track" cx="39" cy="39" r="33" fill="none" stroke-width="8"/>
+            <circle class="fill" id="ovRing" cx="39" cy="39" r="33" fill="none" stroke-width="8" stroke-dasharray="207.3" stroke-dashoffset="207.3"/>
+          </svg>
+          <div class="pct" id="ovPct">0%</div>
+        </div>
+        <div>
+          <div class="label">Opanowane fiszki</div>
+          <div class="big"><span id="ovKnown">0</span> / <span id="ovTotal">0</span></div>
+          <div class="meta" id="ovMeta"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head">
+        <h2>Wybierz zakres</h2>
+        <span class="hint" id="selCount"></span>
+      </div>
+      <div class="topics" id="topicList"></div>
+      <div class="selrow">
+        <button id="selAll">ZAZNACZ WSZYSTKIE</button>
+        <button id="selNone">ODZNACZ WSZYSTKIE</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="head"><h2>Tryb nauki</h2></div>
+      <div class="modes">
+        <button class="mode" id="modeCards" aria-pressed="true">
+          <span class="ic">🗂️</span><span class="mt">Fiszki</span>
+          <span class="md">Pytanie → odsłoń odpowiedź, oceniaj wiedzę</span>
+        </button>
+        <button class="mode" id="modeQuiz" aria-pressed="false">
+          <span class="ic">✓</span><span class="mt">Quiz</span>
+          <span class="md">Test jednokrotnego wyboru z punktacją</span>
+        </button>
+      </div>
+      <button class="cta" id="startBtn">Rozpocznij</button>
+    </section>
+
+    <p class="foot">
+      Materiał na podstawie wgranych zagadnień egzaminacyjnych.<br>
+      Postęp zapisywany jest lokalnie w przeglądarce. Działa offline po zainstalowaniu.
+    </p>
+  </main>
+
+  <!-- FLASHCARDS -->
+  <main id="cards" class="hidden">
+    <div class="sessbar">
+      <button class="ghost" id="cardExit">‹ Wyjdź</button>
+      <div class="prog">
+        <div class="bar"><i id="cardBar" style="width:0%"></i></div>
+        <div class="cnt"><span id="cardPos">0 / 0</span><span id="cardKnownInfo">Umiem: 0</span></div>
+      </div>
+      <button class="ghost" id="cardShuffle" title="Przetasuj">⤮ Tasuj</button>
+    </div>
+    <div class="scene">
+      <div class="card" id="cardEl" role="button" tabindex="0" aria-label="Karta — dotknij, aby odsłonić odpowiedź">
+        <div class="face front">
+          <div class="tag"><span id="cFTag">DZIAŁ</span><span id="cFNum"></span></div>
+          <div class="q" id="cardQ">…</div>
+          <div class="fliphint">Dotknij karty lub naciśnij spację, aby odsłonić odpowiedź</div>
+        </div>
+        <div class="face back">
+          <div class="tag"><b>Odpowiedź</b><span id="cBTag"></span></div>
+          <div class="a" id="cardA">…</div>
+        </div>
+      </div>
+    </div>
+    <div class="deckctrl">
+      <button class="judge review" id="judgeReview">↺ Powtórz</button>
+      <button class="judge know" id="judgeKnow">✓ Umiem</button>
+    </div>
+    <div class="navrow">
+      <button id="cardPrev">‹ Poprzednia</button>
+      <span class="mid">spacja: odsłoń · ← →: nawigacja · 1/2: ocena</span>
+      <button id="cardNext">Następna ›</button>
+    </div>
+  </main>
+
+  <!-- QUIZ -->
+  <main id="quiz" class="hidden">
+    <div class="sessbar">
+      <button class="ghost" id="quizExit">‹ Wyjdź</button>
+      <div class="prog">
+        <div class="bar"><i id="quizBar" style="width:0%"></i></div>
+        <div class="cnt"><span id="quizPos">0 / 0</span><span id="quizScoreInfo">Wynik: 0</span></div>
+      </div>
+    </div>
+    <div class="qcard">
+      <div class="qtag"><span id="qTag">DZIAŁ</span><span id="qNum"></span></div>
+      <div class="q" id="quizQ">…</div>
+      <div class="opts" id="quizOpts"></div>
+      <div class="explain hidden" id="quizExplain"></div>
+      <button class="qnext hidden" id="quizNext">Dalej ›</button>
+    </div>
+  </main>
+
+  <!-- RESULTS -->
+  <main id="results" class="hidden">
+    <div class="panel result">
+      <div class="score"><span id="resScore">0</span><small>/<span id="resTotal">0</span></small></div>
+      <div class="verdict" id="resVerdict">—</div>
+      <div class="rsub" id="resSub"></div>
+      <div class="breakdown" id="resBreakdown"></div>
+      <div class="resbtns">
+        <button class="cta" id="resRetryWrong">Powtórz błędne pytania</button>
+        <button class="ghost" id="resRestart" style="padding:13px">Nowa sesja</button>
+      </div>
+    </div>
+  </main>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ===== BAZA PYTAŃ (edytuj tutaj, aby dodać/zmienić pytania) ===== -->
+<script>
+/* ============================================================
+   Baza pytań — egzamin magisterski, Informatyka
+   Specjalność: Systemy analiz danych (Data Science)
+   Politechnika Lubelska
+   ------------------------------------------------------------
+   Aby dodać własne pytanie: dopisz obiekt do tablicy DECK
+   (fiszka: {id, topic, q, a}) lub QUIZ (test: {id, topic, q,
+   options:[...], correct: <indeks>, explain}).
+   ============================================================ */
+
+const TOPICS = [
+  { id: "pub",      code: "PUB", name: "Publikowanie artykułów naukowych" },
+  { id: "explore",  code: "EXD", name: "Zaawansowana eksploracja i analiza danych" },
+  { id: "multi",    code: "MCR", name: "Wnioskowanie wielokryterialne" },
+  { id: "bi",       code: "BI",  name: "Business Intelligence" },
+  { id: "plsql",    code: "SQL", name: "Programowanie w PL/SQL" },
+  { id: "python",   code: "PY",  name: "Zaawansowane programowanie w Pythonie" },
+  { id: "iot",      code: "IOT", name: "Internet Rzeczy" },
+  { id: "barriers", code: "A11Y",name: "Bariery w przestrzeni cyfrowej" },
+];
+
+/* ------------------------- FISZKI ------------------------- */
+const DECK = [
+
+  /* === PUB — Publikowanie artykułów naukowych === */
+  { id:"pub1", topic:"pub", q:"Struktura publikacji naukowych — schemat IMRaD.",
+    a:"IMRaD = Introduction, Methods, Results and Discussion — standardowy układ artykułu empirycznego. Wprowadzenie (cel, hipoteza, tło i luka badawcza), Metody (jak przeprowadzono badanie — odtwarzalność), Wyniki (co uzyskano, bez interpretacji), Dyskusja (interpretacja, odniesienie do literatury, ograniczenia, wnioski). Towarzyszą im: tytuł, abstrakt, słowa kluczowe, bibliografia, czasem podziękowania i deklaracje." },
+  { id:"pub2", topic:"pub", q:"Identyfikator ORCID. Indeks Hirscha (h-index).",
+    a:"ORCID (Open Researcher and Contributor ID) — trwały 16-cyfrowy identyfikator jednoznacznie odróżniający naukowca (rozwiązuje problem zbieżnych nazwisk), powiązany z dorobkiem. Indeks Hirscha (h): autor ma indeks h, gdy h jego publikacji ma co najmniej h cytowań każda; łączy produktywność z wpływem (cytowalnością). Wada: zależy od dziedziny i stażu, nie maleje." },
+  { id:"pub3", topic:"pub", q:"Rodzaje artykułów naukowych.",
+    a:"Oryginalny artykuł badawczy (original research), artykuł przeglądowy (review / systematic review), metaanaliza, komunikat / krótkie doniesienie (letter, short communication), studium przypadku (case study), artykuł koncepcyjny / teoretyczny, materiały konferencyjne (conference paper), artykuł metodologiczny, dane (data paper)." },
+  { id:"pub4", topic:"pub", q:"Wskaźniki bibliometryczne. Lista Filadelfijska.",
+    a:"Wskaźniki: Impact Factor (JCR, Clarivate), CiteScore (Scopus), SJR (SCImago Journal Rank), SNIP, h-index, liczba cytowań, kwartyl (Q1–Q4). Mierzą wpływ czasopisma lub autora. Lista Filadelfijska — potoczna nazwa wykazu czasopism indeksowanych w bazach ISI / Web of Science (dawniej Institute for Scientific Information w Filadelfii, dziś Clarivate); obecność na niej świadczy o renomie czasopisma." },
+  { id:"pub5", topic:"pub", q:"Bazy danych bibliograficznych. Baza Scopus.",
+    a:"Bazy: Scopus, Web of Science, Google Scholar, PubMed, IEEE Xplore, ACM DL, DBLP. Scopus (Elsevier) — duża baza abstraktów i cytowań recenzowanych czasopism, materiałów konferencyjnych i książek; dostarcza wskaźniki CiteScore, SJR, SNIP oraz narzędzia śledzenia cytowań i profili autorów. Służy do przeglądu literatury i oceny dorobku." },
+  { id:"pub6", topic:"pub", q:"Narzędzia AI w pracy naukowca.",
+    a:"Wyszukiwanie i streszczanie literatury (Elicit, Semantic Scholar, ResearchRabbit, Consensus), korekta i styl języka (Grammarly, DeepL Write), generowanie/parafraza i burza mózgów (ChatGPT, Claude), zarządzanie bibliografią (Zotero, Mendeley), tłumaczenie, wykrywanie plagiatu i tekstów AI. Ograniczenia: ryzyko halucynacji i błędnych cytowań, kwestie etyczne i polityki wydawców (konieczność weryfikacji i ujawniania użycia AI)." },
+
+  /* === EXPLORE — Zaawansowana eksploracja i analiza danych === */
+  { id:"exd1", topic:"explore", q:"Metody zapisu danych przestrzennych. Typ SDO_GEOMETRY.",
+    a:"Dane przestrzenne zapisuje się jako geometrie wektorowe (punkt, linia, poligon) lub rastry. W Oracle Spatial służy do tego typ obiektowy SDO_GEOMETRY o atrybutach: SDO_GTYPE (typ geometrii i wymiar), SDO_SRID (układ współrzędnych), SDO_POINT (dla punktów), SDO_ELEM_INFO (opis budowy elementów) i SDO_ORDINATES (tablica współrzędnych). Standardem jest też WKT/WKB oraz formaty GeoJSON, Shapefile." },
+  { id:"exd2", topic:"explore", q:"Funkcje i operatory przestrzenne. Zapytania przestrzenne.",
+    a:"Operatory (wykorzystują indeks przestrzenny, np. R-drzewo): SDO_RELATE (relacje topologiczne TOUCH, OVERLAP, INSIDE, CONTAINS), SDO_WITHIN_DISTANCE (w promieniu), SDO_NN (najbliższy sąsiad), SDO_FILTER. Funkcje SDO_GEOM: SDO_AREA, SDO_LENGTH, SDO_DISTANCE, SDO_BUFFER, SDO_INTERSECTION. Przykłady zapytań: znajdź obiekty w promieniu 5 km, wykryj przecięcia działek, wskaż najbliższy szpital." },
+  { id:"exd3", topic:"explore", q:"Analiza danych przestrzennych — przykładowe zastosowanie.",
+    a:"Analiza zależności i wzorców w przestrzeni: GIS, geomarketing, wyznaczanie tras, analiza gęstości (hot-spot), buforowanie, nakładanie warstw (overlay), autokorelacja przestrzenna (I Morana). Przykład: wybór lokalizacji nowego sklepu — analiza gęstości klientów, odległości od konkurencji i dostępności komunikacyjnej w buforze, aby zmaksymalizować zasięg." },
+  { id:"exd4", topic:"explore", q:"Metody identyfikacji obserwacji odstających. Omów jedną.",
+    a:"Metody: reguła 3σ / Z-score, rozstęp międzykwartylowy IQR (boxplot), odległość Mahalanobisa, LOF (Local Outlier Factor), Isolation Forest, DBSCAN, One-Class SVM. IQR: liczymy Q1, Q3 i IQR = Q3 − Q1; obserwacja jest odstająca, gdy leży poniżej Q1 − 1,5·IQR lub powyżej Q3 + 1,5·IQR. Metoda nieparametryczna, odporna na rozkład, dobra dla danych skośnych." },
+  { id:"exd5", topic:"explore", q:"Metody estymacji gęstości rozkładu prawdopodobieństwa. Omów jedną.",
+    a:"Metody parametryczne (dopasowanie znanego rozkładu, np. MLE), histogram, estymator jądrowy KDE, k-najbliższych sąsiadów, mieszaniny rozkładów (GMM). KDE (kernel density estimation): gęstość estymujemy jako sumę funkcji jądrowych (np. gaussowskich) umieszczonych nad każdą obserwacją; kluczowy jest parametr wygładzania h (bandwidth) — za mały daje przeszumienie, za duży nadmierne wygładzenie. Metoda nieparametryczna, daje gładką estymatę." },
+  { id:"exd6", topic:"explore", q:"ANOVA, MANOVA — postawienie zagadnienia i zastosowania.",
+    a:"ANOVA (analiza wariancji) testuje, czy średnie jednej zmiennej zależnej różnią się między ≥3 grupami; H0: wszystkie średnie równe; statystyka F porównuje wariancję międzygrupową z wewnątrzgrupową. MANOVA — uogólnienie na wiele zmiennych zależnych jednocześnie (uwzględnia ich korelacje, np. test Wilksa). Zastosowania: porównanie skuteczności kilku metod/leków, wpływ czynników na wyniki; zalety nad serią testów t — kontrola błędu I rodzaju." },
+  { id:"exd7", topic:"explore", q:"Modele regresji. Regresja wielokrotna — postawienie zagadnienia.",
+    a:"Regresja modeluje zależność zmiennej zależnej (ciągłej) od predyktorów. Regresja wielokrotna: y = β0 + β1x1 + … + βk xk + ε, gdzie wiele zmiennych objaśniających przewiduje y. Współczynniki estymuje się metodą najmniejszych kwadratów (OLS). Cel: predykcja oraz ocena wpływu poszczególnych zmiennych (istotność, znak i siła). Założenia: liniowość, niezależność i normalność reszt, homoskedastyczność, brak współliniowości." },
+  { id:"exd8", topic:"explore", q:"Metody redukcji wymiaru i liczności próby. Omów jedną.",
+    a:"Redukcja wymiaru: PCA, LDA, t-SNE, UMAP, autoenkodery, selekcja cech (filter/wrapper/embedded). Redukcja liczności: próbkowanie (losowe, warstwowe), klasteryzacja i wybór prototypów, agregacja. PCA (analiza składowych głównych): rzutowanie danych na nowe, ortogonalne osie (składowe główne) wyznaczone przez wektory własne macierzy kowariancji, uporządkowane wg malejącej wyjaśnianej wariancji; pozwala odrzucić mało istotne kierunki przy minimalnej stracie informacji." },
+  { id:"exd9", topic:"explore", q:"Metody analizy skupień. Omów jedną.",
+    a:"Metody: k-średnich, hierarchiczna (aglomeracyjna/dzieląca), DBSCAN (gęstościowa), EM/GMM, k-medoids, spektralna. k-średnich (k-means): zadajemy liczbę skupień k, inicjalizujemy centroidy, iteracyjnie (1) przypisujemy punkty do najbliższego centroidu, (2) przeliczamy centroidy jako średnie skupień — aż do zbieżności. Minimalizuje sumę kwadratów odległości wewnątrz skupień (WCSS); wrażliwa na k, inicjalizację i skalę cech." },
+  { id:"exd10", topic:"explore", q:"Systemy rekomendacji — rodzaje i przykład.",
+    a:"Rodzaje: filtrowanie kolaboracyjne (collaborative — user-based / item-based, faktoryzacja macierzy), oparte na treści (content-based), oparte na wiedzy/regułach, hybrydowe. Przykład — filtrowanie kolaboracyjne item-based: szuka przedmiotów podobnych do tych, które użytkownik wysoko ocenił (podobieństwo np. kosinusowe na wektorach ocen) i rekomenduje najbliższe. Problemy: zimny start, rzadkość macierzy ocen, skalowalność." },
+  { id:"exd11", topic:"explore", q:"Metody porównania modeli uczenia maszynowego. Omów na przykładzie.",
+    a:"Porównujemy modele na tym samym zbiorze przy walidacji krzyżowej (k-fold, repeated, 5×2 cv). Aby ocenić istotność różnic, stosujemy testy statystyczne: sparowany test t, test McNemara (klasyfikacja), test Friedmana + test post-hoc Nemenyiego (wiele modeli na wielu zbiorach). Przykład: dwa klasyfikatory oceniamy 10-krotną CV, liczymy różnice F1 na foldach i sparowanym testem t sprawdzamy, czy średnia różnica istotnie ≠ 0." },
+  { id:"exd12", topic:"explore", q:"Ocena jakości modeli klasyfikacyjnych.",
+    a:"Podstawą jest macierz pomyłek (TP, FP, FN, TN). Metryki: accuracy = (TP+TN)/N, precyzja = TP/(TP+FP), czułość/recall = TP/(TP+FN), F1 (średnia harmoniczna precyzji i czułości), specyficzność, krzywa ROC i pole AUC, krzywa PR, log-loss, współczynnik Matthewsa (MCC). Przy niezbalansowanych klasach accuracy myli — lepiej F1, AUC-PR, MCC." },
+  { id:"exd13", topic:"explore", q:"Ocena jakości modeli regresyjnych i prognozujących.",
+    a:"Metryki błędu: MAE (średni błąd bezwzględny), MSE i RMSE (karzą duże błędy), MAPE (błąd procentowy), R² (współczynnik determinacji — udział wyjaśnionej wariancji), skorygowane R². Dla prognoz szeregów: błąd liczony out-of-sample, MASE, analiza reszt (brak autokorelacji, losowość), porównanie z modelem naiwnym/sezonowym." },
+  { id:"exd14", topic:"explore", q:"Ocena jakości modeli analizy skupień.",
+    a:"Miary wewnętrzne (bez etykiet): wskaźnik sylwetki (silhouette), indeks Daviesa-Bouldina (im mniejszy, tym lepiej), indeks Calińskiego-Harabasza, WCSS + metoda łokcia do doboru k. Miary zewnętrzne (gdy znamy prawdziwy podział): indeks Randa i skorygowany ARI, NMI (znormalizowana informacja wzajemna), homogeniczność i kompletność. Ocenia się zwartość skupień i ich separację." },
+  { id:"exd15", topic:"explore", q:"Statystyczne sterowanie procesem (SPC) — cel i metody.",
+    a:"Cel SPC: monitorowanie stabilności procesu i odróżnianie zmienności losowej (przyczyny wspólne) od przyczyn specjalnych (sygnał do interwencji), bez nadmiernej regulacji. Metody: karty kontrolne Shewharta (X̄-R, X̄-S, p, np, c, u) z liniami centralną i granicami kontrolnymi (±3σ), reguły Western Electric, analiza zdolności procesu (Cp, Cpk), histogram, diagram Pareto, diagram Ishikawy (przyczynowo-skutkowy)." },
+
+  /* === MULTI — Wnioskowanie wielokryterialne === */
+  { id:"mcr1", topic:"multi", q:"Główne zadania normalizacji wartości kryteriów optymalizacji.",
+    a:"Normalizacja sprowadza kryteria wyrażone w różnych jednostkach i o różnych zakresach do wspólnej, porównywalnej i bezwymiarowej skali (najczęściej [0,1]), aby można je było agregować i ważyć. Ujednolica też kierunek optymalizacji — kryteria typu koszt (minimalizacja) przekształca tak, by większa wartość znaczyła „lepiej”, jak dla kryteriów typu zysk. Metody: min-max, normalizacja wektorowa (przez normę), dzielenie przez wartość maksymalną/sumę." },
+  { id:"mcr2", topic:"multi", q:"Na czym polega metoda leksykograficzna?",
+    a:"Kryteria porządkuje się według malejącej ważności (hierarchia). Najpierw optymalizuje się najważniejsze kryterium; spośród wariantów najlepszych pod jego względem wybiera się te najlepsze pod względem kolejnego kryterium itd. Jest to metoda niekompensacyjna — przewaga w kryterium ważniejszym nie może być zrekompensowana żadną przewagą w mniej ważnym." },
+  { id:"mcr3", topic:"multi", q:"Jak wyznacza się wagi ważności kryteriów w metodzie AHP?",
+    a:"AHP (Saaty): tworzy się macierz porównań parami kryteriów w skali fundamentalnej 1–9 (1 — równoważne, 9 — skrajna przewaga). Wagi to znormalizowany wektor własny odpowiadający największej wartości własnej λmax tej macierzy (w praktyce: normalizacja kolumn i uśrednienie wierszy). Spójność ocen weryfikuje się wskaźnikiem i współczynnikiem spójności CR = CI/RI; akceptowalne, gdy CR < 0,1." },
+  { id:"mcr4", topic:"multi", q:"Warianty optymalne w sensie Pareto.",
+    a:"Wariant jest optymalny w sensie Pareto (niezdominowany), gdy nie istnieje inny wariant lepszy od niego w co najmniej jednym kryterium bez jednoczesnego pogorszenia w którymkolwiek innym. Zbiór wszystkich takich wariantów tworzy front (granicę) Pareto. Poprawa jednego kryterium w tym zbiorze wymaga pogorszenia innego — to rozwiązania kompromisowe, spośród których decydent wybiera ostateczny." },
+  { id:"mcr5", topic:"multi", q:"Scharakteryzuj metodę Blina.",
+    a:"Metoda Blina należy do metod opartych na relacjach preferencji i porządkach (teoria wyboru społecznego, pokrewna podejściu Condorceta). Z indywidualnych rankingów wariantów według poszczególnych kryteriów buduje się macierz częstości/preferencji (jak często wariant jest preferowany nad inny). Następnie wyznacza się zbiorowy ranking możliwie najbliższy preferencjom cząstkowym, minimalizujący łączną niezgodność (sprzeczność) względem rankingów składowych." },
+
+  /* === BI — Business Intelligence === */
+  { id:"bi1", topic:"bi", q:"Różnice między hurtownią danych a data mart.",
+    a:"Hurtownia danych (DW) to scentralizowane, zintegrowane repozytorium danych całej organizacji, obejmujące wiele obszarów i długą historię. Data mart to mniejszy, tematyczny wycinek przeznaczony dla jednego działu/obszaru (np. sprzedaż). Marty bywają zależne (zasilane z DW) lub niezależne (z własnym ETL). Różnice: zakres, wielkość, odbiorca i czas wdrożenia (mart szybszy, węższy)." },
+  { id:"bi2", topic:"bi", q:"Modele danych stosowane w hurtowniach danych.",
+    a:"Schemat gwiazdy (star) — centralna tabela faktów otoczona zdenormalizowanymi tabelami wymiarów; prosty i szybki w zapytaniach. Schemat płatka śniegu (snowflake) — wymiary znormalizowane (rozbite na podtabele); mniej redundancji, więcej złączeń. Schemat konstelacji faktów (galaxy / fact constellation) — wiele tabel faktów współdzielących wymiary." },
+  { id:"bi3", topic:"bi", q:"Możliwe architektury hurtowni danych.",
+    a:"Jednowarstwowa (minimalizacja redundancji, rzadko stosowana), dwuwarstwowa (źródła → DW), trójwarstwowa: warstwa źródeł + obszar przejściowy (staging/ODS) → warstwa hurtowni → warstwa prezentacji (OLAP, raporty). Podejścia projektowe: Inmona (top-down, korporacyjna znormalizowana DW, z niej marty) i Kimballa (bottom-up, najpierw wymiarowe data marty łączone magistralą)." },
+  { id:"bi4", topic:"bi", q:"Różnice między hurtownią danych a systemem klasy ERP.",
+    a:"ERP to system transakcyjny (OLTP) wspierający bieżące procesy biznesowe — dane aktualne, model znormalizowany, częste krótkie operacje zapisu/odczytu. Hurtownia to system analityczny (OLAP) — dane historyczne i zagregowane, model zdenormalizowany (gwiazda), zoptymalizowany pod złożone zapytania odczytu i wspomaganie decyzji. ERP zasila DW poprzez ETL." },
+  { id:"bi5", topic:"bi", q:"Pojęcia: Fakt, Wymiar, Miara — z przykładami.",
+    a:"Fakt — zdarzenie/proces biznesowy będący przedmiotem analizy, zapisany w tabeli faktów (np. transakcja sprzedaży). Miara — liczbowy, agregowalny atrybut faktu (np. kwota sprzedaży, liczba sztuk, marża). Wymiar — kontekst opisujący fakt, po którym analizujemy miary (np. Czas: rok/kwartał/dzień; Produkt; Klient; Lokalizacja)." },
+  { id:"bi6", topic:"bi", q:"Procesy w ramach działań ETL.",
+    a:"Extract — pobranie danych z heterogenicznych źródeł (bazy, pliki, API). Transform — czyszczenie i ujednolicenie: usuwanie duplikatów, uzupełnianie braków, konwersje typów i jednostek, walidacja, standaryzacja, agregacje, łączenie, nadanie kluczy zastępczych. Load — załadowanie do hurtowni (pełne lub przyrostowe). Wariant ELT przenosi transformacje do docelowej bazy." },
+  { id:"bi7", topic:"bi", q:"Wymiary wolnozmienne (SCD) — zastosowanie i rodzaje.",
+    a:"SCD (Slowly Changing Dimensions) obsługują zmiany atrybutów wymiaru w czasie, zachowując poprawność analiz historycznych. Typy: 0 — bez zmian; 1 — nadpisanie wartości (brak historii); 2 — nowy wiersz z wersją/datami obowiązywania i flagą bieżącego rekordu (pełna historia); 3 — dodatkowa kolumna z poprzednią wartością (ograniczona historia); 4/6 — rozwiązania hybrydowe (tabela historyczna / kombinacja typów)." },
+  { id:"bi8", topic:"bi", q:"Architektura systemu Business Intelligence.",
+    a:"Warstwy: (1) źródła danych (OLTP/ERP, pliki, strumienie); (2) integracja — ETL/ELT i obszar staging; (3) skład — hurtownia danych i data marty; (4) warstwa analityczna — kostki OLAP, modele, data mining; (5) prezentacja — raporty, dashboardy, wizualizacje, eksploracja ad-hoc dla użytkownika końcowego. Całość spina metadane i zarządzanie jakością danych." },
+  { id:"bi9", topic:"bi", q:"Operacje realizowane w ramach ROLAP.",
+    a:"ROLAP realizuje operacje OLAP na relacyjnej bazie (zapytania SQL na schemacie gwiazdy). Operacje: roll-up (agregacja w górę hierarchii, np. dzień→miesiąc→rok), drill-down (uszczegółowienie w dół), slice (wybór jednej wartości jednego wymiaru), dice (podkostka — wybór zakresów kilku wymiarów), pivot/rotate (obrót — zmiana układu wymiarów w raporcie)." },
+  { id:"bi10", topic:"bi", q:"Wiodące narzędzia BI i ich funkcjonalności.",
+    a:"Microsoft Power BI, Tableau, Qlik (QlikView/Qlik Sense), Microsoft BI stack (SSIS — ETL, SSAS — kostki/model, SSRS — raporty), Oracle BI, SAP BusinessObjects, Looker. Główne funkcje: łączenie i modelowanie danych, ETL, kostki OLAP, interaktywne dashboardy i wizualizacje, raportowanie, eksploracja danych, udostępnianie i mobilny dostęp." },
+
+  /* === PLSQL === */
+  { id:"sql1", topic:"plsql", q:"Ogólna budowa bloku PL/SQL.",
+    a:"Blok składa się z trzech sekcji: DECLARE (opcjonalna — deklaracje zmiennych, kursorów, typów, wyjątków), BEGIN … (obowiązkowa — instrukcje wykonywalne), EXCEPTION (opcjonalna — obsługa wyjątków) oraz END;. Bloki bywają anonimowe (uruchamiane doraźnie) lub nazwane — procedury, funkcje, pakiety i wyzwalacze. Bloki można zagnieżdżać." },
+  { id:"sql2", topic:"plsql", q:"Czym są kursory i do czego się je wykorzystuje?",
+    a:"Kursor to wskaźnik na obszar roboczy (kontekst) zawierający zbiór wynikowy zapytania, umożliwiający przetwarzanie wyników wiersz po wierszu. Kursory niejawne (SQL) tworzą się automatycznie dla pojedynczych instrukcji DML/SELECT INTO; kursory jawne deklaruje programista i obsługuje (OPEN, FETCH, CLOSE), gdy zapytanie zwraca wiele wierszy. Atrybuty: %FOUND, %NOTFOUND, %ROWCOUNT, %ISOPEN." },
+  { id:"sql3", topic:"plsql", q:"Jakie działania realizuje pętla kursora?",
+    a:"Pętla kursorowa FOR rekord IN kursor LOOP … END LOOP; automatycznie: otwiera kursor, pobiera kolejne wiersze do zmiennej rekordowej, iteruje aż do wyczerpania zbioru wyników i na końcu zamyka kursor. Upraszcza kod — nie trzeba ręcznie wywoływać OPEN/FETCH/CLOSE ani sprawdzać %NOTFOUND. Można użyć też pętli z kursorem niejawnym (FOR r IN (SELECT …))." },
+  { id:"sql4", topic:"plsql", q:"Czym są wyjątki i jak się nimi posługiwać w PL/SQL?",
+    a:"Wyjątek to sygnał błędu w czasie wykonania, przechwytywany w sekcji EXCEPTION (WHEN nazwa THEN …). Predefiniowane: NO_DATA_FOUND, TOO_MANY_ROWS, ZERO_DIVIDE, DUP_VAL_ON_INDEX. Można definiować własne wyjątki i zgłaszać je RAISE, a komunikaty użytkownika — RAISE_APPLICATION_ERROR(kod, tekst). WHEN OTHERS przechwytuje pozostałe; SQLCODE/SQLERRM dają kod i opis błędu." },
+  { id:"sql5", topic:"plsql", q:"Definiowanie i posługiwanie się funkcjami i procedurami PL/SQL.",
+    a:"Procedura wykonuje akcję i nie musi zwracać wartości; parametry mogą być IN (wejściowe), OUT (wyjściowe) lub IN OUT. Funkcja zawiera RETURN i zwraca dokładnie jedną wartość, więc można jej użyć w wyrażeniu/zapytaniu. Składnia: CREATE [OR REPLACE] PROCEDURE/FUNCTION nazwa(param…) IS … BEGIN … END;. Wywołanie procedury jako instrukcja, funkcji — jako element wyrażenia." },
+  { id:"sql6", topic:"plsql", q:"Składowane procedury i funkcje — definiowanie i zastosowanie.",
+    a:"Procedury/funkcje składowane to nazwane, skompilowane jednostki zapisane w bazie (CREATE OR REPLACE …). Zalety: wielokrotne użycie i centralizacja logiki, mniejszy ruch sieciowy, lepsza wydajność (skompilowany kod), bezpieczeństwo (uprawnienia EXECUTE zamiast bezpośredniego dostępu do tabel), spójność reguł biznesowych. Wywoływane z aplikacji, innych procedur, wyzwalaczy." },
+  { id:"sql7", topic:"plsql", q:"Rodzaje kolekcji w PL/SQL.",
+    a:"Tablice asocjacyjne (index-by tables) — indeksowane liczbą lub łańcuchem, rozmiar nieograniczony, tylko w PL/SQL. VARRAY (varying array) — uporządkowane, o zadanym maksymalnym rozmiarze, gęste, mogą być kolumną tabeli. Tablice zagnieżdżone (nested tables) — bez ustalonego maksimum, mogą być rzadkie, przechowywane w bazie. Służą do przechowywania wielu wartości tego samego typu (listy, zestawy)." },
+  { id:"sql8", topic:"plsql", q:"Czym są wyzwalacze bazy danych?",
+    a:"Wyzwalacz (trigger) to nazwany blok PL/SQL uruchamiany automatycznie w reakcji na zdarzenie. Typy: DML (INSERT/UPDATE/DELETE), DDL i systemowe (logon, startup). Atrybuty: BEFORE/AFTER (czas), na poziomie wiersza (FOR EACH ROW, z :NEW/:OLD) lub instrukcji. Zastosowania: walidacja i wymuszanie reguł biznesowych, audyt/logowanie zmian, utrzymanie spójności i wartości pochodnych, autonumeracja." },
+  { id:"sql9", topic:"plsql", q:"Pakiety PL/SQL — tworzenie, zawartość, zastosowanie.",
+    a:"Pakiet grupuje powiązane obiekty: procedury, funkcje, typy, kursory i zmienne. Składa się ze specyfikacji (CREATE PACKAGE — interfejs publiczny: nagłówki dostępne na zewnątrz) i ciała (CREATE PACKAGE BODY — implementacja oraz elementy prywatne). Zalety: modularność i hermetyzacja, ukrycie implementacji, przeładowanie nazw, lepsza wydajność (ładowanie do pamięci), stan utrzymywany w sesji." },
+  { id:"sql10", topic:"plsql", q:"Dynamiczny SQL i PL/SQL — charakterystyka i przykład.",
+    a:"Dynamiczny SQL to budowanie i wykonywanie instrukcji w czasie działania programu, gdy ich treść (np. nazwa tabeli, warunki) nie jest znana podczas kompilacji. Realizacja: EXECUTE IMMEDIATE 'instrukcja' [USING …] lub pakiet DBMS_SQL (większa kontrola). Przykład: EXECUTE IMMEDIATE 'DROP TABLE ' || nazwa_tabeli; albo dynamiczne SELECT … INTO z klauzulą USING. Uwaga na ryzyko SQL injection — stosować parametry wiązane (bind variables)." },
+
+  /* === PYTHON === */
+  { id:"py1", topic:"python", q:"Co to są i do czego służą dekoratory funkcji?",
+    a:"Dekorator to funkcja przyjmująca inną funkcję i zwracająca jej zmodyfikowaną wersję — pozwala dodać zachowanie bez ingerencji w kod udekorowany. Stosuje się składnię @dekorator nad definicją. Typowe zastosowania: logowanie, pomiar czasu, cache (functools.lru_cache), kontrola dostępu/autoryzacja, walidacja argumentów, rejestrowanie funkcji. @functools.wraps zachowuje metadane oryginału." },
+  { id:"py2", topic:"python", q:"Co to są metaklasy i jakie mają zastosowania?",
+    a:"Metaklasa to klasa, której instancjami są klasy — kontroluje sposób tworzenia i konfigurowania klas. Domyślną metaklasą jest type; własne dziedziczą po type i nadpisują __new__/__init__ (lub __call__). Zastosowania w zaawansowanych aplikacjach: ORM (mapowanie pól na kolumny, jak w Django), automatyczna rejestracja klas (pluginy), wymuszanie konwencji/walidacja definicji klasy, implementacja wzorców (np. singleton)." },
+  { id:"py3", topic:"python", q:"Mechanizm obsługi wyjątków try-except.",
+    a:"try zawiera kod mogący zgłosić wyjątek; except przechwytuje wskazany typ (można wiele bloków i krotki typów); else wykonuje się, gdy nie wystąpił żaden wyjątek; finally — zawsze (sprzątanie zasobów). Wyjątek zgłasza się przez raise. Dobre praktyki: łapać konkretne typy, nie używać „gołego” except, korzystać z hierarchii klas wyjątków i menedżerów kontekstu (with)." },
+  { id:"py4", topic:"python", q:"Co to są i do czego służą klasy abstrakcyjne?",
+    a:"Klasa abstrakcyjna definiuje wspólny interfejs, ale nie może być bezpośrednio zinstancjonowana; tworzy się ją dziedzicząc po abc.ABC lub z metaklasą ABCMeta. Metody oznaczone @abstractmethod muszą zostać zaimplementowane w podklasach — inaczej one też pozostają abstrakcyjne. Zapewnia kontrakt (polimorfizm) i wymusza spójność implementacji w hierarchii klas." },
+  { id:"py5", topic:"python", q:"Metody specjalne (dunder) — po co i przykład.",
+    a:"Metody specjalne (__nazwa__) pozwalają obiektom współpracować z wbudowaną składnią i funkcjami języka oraz przeciążać operatory. Przykłady: __init__ (inicjalizacja), __str__/__repr__ (reprezentacje tekstowe), __len__ (len()), __eq__/__lt__ (porównania), __add__ (operator +), __iter__/__next__ (iteracja), __getitem__ (indeksowanie). Np. __str__ zwraca czytelny dla człowieka opis obiektu używany przez print() i str()." },
+  { id:"py6", topic:"python", q:"Funkcje lambda — czym są i zastosowania.",
+    a:"Lambda to anonimowa funkcja zapisana w jednym wyrażeniu: lambda argumenty: wyrażenie. Zwraca wynik wyrażenia bez słowa return. Stosuje się je jako krótkie funkcje przekazywane jako argument, np. klucz sortowania sorted(dane, key=lambda x: x[1]), w map(), filter(), reduce() czy callbackach. Do złożonej logiki lepsza jest zwykła funkcja def." },
+  { id:"py7", topic:"python", q:"Co to jest funkcja mapująca w Pythonie?",
+    a:"map(funkcja, iterowalne, …) stosuje podaną funkcję do każdego elementu jednego lub wielu obiektów iterowalnych i zwraca leniwy iterator z wynikami (w Pythonie 3). Wynik często opakowuje się w list()/tuple(). Przykład: list(map(str.upper, ['a','b'])) → ['A','B']. Alternatywą jest list comprehension, często czytelniejsze." },
+  { id:"py8", topic:"python", q:"Czym różnią się *args i **kwargs?",
+    a:"*args zbiera dowolną liczbę dodatkowych argumentów pozycyjnych w krotkę; **kwargs zbiera dowolną liczbę argumentów nazwanych (klucz=wartość) w słownik. Pozwalają tworzyć elastyczne funkcje o zmiennej liczbie parametrów i przekazywać argumenty dalej (rozpakowanie f(*lista, **slownik)). Przykład: def f(*args, **kwargs): print(args, kwargs) — f(1,2,a=3) → (1,2) {'a':3}." },
+  { id:"py9", topic:"python", q:"Jak działa list comprehension?",
+    a:"To zwięzła składnia tworzenia listy w jednym wyrażeniu: [wyrażenie for element in iterowalne if warunek]. Łączy iterację, transformację i opcjonalne filtrowanie, jest czytelniejsza i zwykle szybsza od pętli z .append(). Przykład: [x*x for x in range(10) if x % 2 == 0] → kwadraty liczb parzystych. Analogicznie istnieją set/dict comprehension oraz wyrażenia generatorowe ()." },
+  { id:"py10", topic:"python", q:"Jak działa metoda __init__ w klasie?",
+    a:"__init__ to inicjalizator wywoływany automatycznie tuż po utworzeniu obiektu (po __new__), gdy używamy Klasa(...). Pierwszy parametr self to referencja do tworzonej instancji; w ciele ustawia się atrybuty (self.pole = wartość) i wykonuje wstępną konfigurację. Nie zwraca wartości (None). To „konstruktor” w potocznym sensie, choć formalnie obiekt tworzy __new__." },
+
+  /* === IOT === */
+  { id:"iot1", topic:"iot", q:"Krótko opisz zagadnienie Internetu Rzeczy.",
+    a:"Internet Rzeczy (IoT) to sieć fizycznych obiektów wyposażonych w czujniki, oprogramowanie i łączność, które zbierają dane o otoczeniu, wymieniają je przez sieć i mogą być zdalnie monitorowane oraz sterowane. Warstwy: percepcji (sensory/aktuatory), sieci (komunikacja), przetwarzania (chmura/edge) i aplikacji. Zastosowania: smart home, przemysł 4.0, miasta, rolnictwo, zdrowie." },
+  { id:"iot2", topic:"iot", q:"Magistrala, interfejs, protokół — charakterystyka i różnice.",
+    a:"Magistrala to wspólny zestaw przewodów/linii służący do przesyłania danych między układami (np. I2C, SPI, CAN) — fizyczny kanał współdzielony przez wiele urządzeń. Interfejs to punkt/standard połączenia (sprzętowy lub programowy) określający, jak urządzenia się łączą (np. UART, USB). Protokół to zbiór reguł komunikacji — format ramek, kolejność, timing, kontrola błędów. Różnica: magistrala = medium, interfejs = sposób połączenia, protokół = reguły wymiany." },
+  { id:"iot3", topic:"iot", q:"Mikrokontroler a mikroprocesor — różnice.",
+    a:"Mikrokontroler to kompletny komputer w jednym układzie (system-on-chip): CPU + pamięć RAM i ROM/Flash + peryferia I/O (timery, ADC, UART). Przeznaczony do sterowania, tani, energooszczędny, działa autonomicznie (np. AVR, STM32, ESP32). Mikroprocesor to sam rdzeń obliczeniowy (CPU) — wymaga zewnętrznej pamięci i układów peryferyjnych, ma większą moc obliczeniową, stosowany w komputerach/serwerach (np. x86)." },
+  { id:"iot4", topic:"iot", q:"Co oznacza skrót CISC?",
+    a:"CISC = Complex Instruction Set Computer. Architektura z rozbudowanym zestawem licznych, złożonych instrukcji o zmiennej długości; pojedyncza instrukcja może wykonać wiele operacji (np. operacja na pamięci z adresowaniem). Cechy: mniej instrukcji w programie, bardziej skomplikowany dekoder, instrukcje trwają wiele cykli, mniejsza liczba rejestrów. Przykład: architektura x86." },
+  { id:"iot5", topic:"iot", q:"Co oznacza skrót RISC?",
+    a:"RISC = Reduced Instruction Set Computer. Architektura z uproszczonym, zredukowanym zestawem prostych instrukcji o stałej długości, najczęściej wykonywanych w jednym cyklu. Cechy: dużo rejestrów, architektura load/store (operacje na danych tylko w rejestrach), łatwy potok (pipelining), prosty dekoder, dłuższy kod ale szybsze i energooszczędne wykonanie. Przykłady: ARM, RISC-V, MIPS." },
+  { id:"iot6", topic:"iot", q:"UART a USRT — opis i różnice.",
+    a:"UART (Universal Asynchronous Receiver-Transmitter) realizuje transmisję asynchroniczną — brak wspólnego zegara, synchronizacja na podstawie bitów startu i stopu oraz ustalonej prędkości (baud rate); prostsze okablowanie, ale mniejsze prędkości. USRT (synchronous) używa wspólnego sygnału zegarowego nadawcy i odbiornika, dzięki czemu osiąga wyższe i bardziej niezawodne prędkości, kosztem dodatkowej linii zegara. (USART łączy oba tryby.)" },
+  { id:"iot7", topic:"iot", q:"Czym jest i co powoduje pojemność pasożytnicza?",
+    a:"Pojemność pasożytnicza to niepożądana pojemność elektryczna powstająca między blisko położonymi przewodnikami (ścieżkami, wyprowadzeniami, uzwojeniami), wynikająca z geometrii układu. Powoduje opóźnienia i zaokrąglanie zboczy sygnałów (filtr RC), ograniczenie maksymalnej częstotliwości pracy, przesłuchy (crosstalk) i zakłócenia, a w torach analogowych — zniekształcenia. Minimalizuje się ją odpowiednim projektem PCB i ekranowaniem." },
+  { id:"iot8", topic:"iot", q:"Cechy sensora inteligentnego.",
+    a:"Sensor inteligentny ma wbudowany mikrokontroler i potrafi: kondycjonować i wstępnie przetwarzać sygnał, dokonywać konwersji A/C, kalibrować się (także samokalibracja) i kompensować wpływ temperatury, prowadzić autodiagnostykę i sygnalizować błędy, komunikować się cyfrowo (standaryzowany interfejs/protokół, adresowalność w sieci), filtrować i agregować dane. Dzięki temu odciąża system nadrzędny i dostarcza gotowe, wiarygodne odczyty." },
+  { id:"iot9", topic:"iot", q:"Czym są i do czego służą aktuatory?",
+    a:"Aktuatory (elementy wykonawcze) przekształcają sygnał sterujący i energię (elektryczną, pneumatyczną, hydrauliczną) na działanie fizyczne — ruch, siłę, ciepło, zmianę stanu. Realizują reakcję systemu na otoczenie (przeciwieństwo sensorów). Przykłady: silniki i serwomechanizmy, siłowniki, zawory, przekaźniki, elementy grzejne, głośniki. W IoT zamykają pętlę sterowania: sensor mierzy → system decyduje → aktuator wykonuje." },
+  { id:"iot10", topic:"iot", q:"Zasada działania modulacji szerokości impulsów (PWM).",
+    a:"PWM (Pulse Width Modulation) to sterowanie sygnałem prostokątnym o stałej częstotliwości, w którym zmienia się współczynnik wypełnienia (duty cycle) — stosunek czasu trwania stanu wysokiego do okresu. Średnia wartość/moc dostarczana do odbiornika jest proporcjonalna do wypełnienia, więc reguluje się ją bez strat właściwych dla regulacji liniowej. Zastosowania: regulacja jasności LED, prędkości silników DC, sterowanie serwami, przetwornice." },
+
+  /* === BARRIERS — Bariery w przestrzeni cyfrowej === */
+  { id:"a11y1", topic:"barriers", q:"Projektowanie uniwersalne — idea, przepisy, zasady.",
+    a:"Idea: projektowanie produktów, usług i środowisk użytecznych dla jak najszerszego grona odbiorców bez potrzeby adaptacji, niezależnie od wieku i sprawności. 7 zasad (Mace/NC State): równość wykorzystania, elastyczność użytkowania, prostota i intuicyjność, czytelność informacji, tolerancja błędów, niski wysiłek fizyczny, odpowiednia wielkość i przestrzeń. Przepisy: Konwencja ONZ o prawach osób niepełnosprawnych, European Accessibility Act, ustawa o dostępności cyfrowej, ustawa o zapewnianiu dostępności." },
+  { id:"a11y2", topic:"barriers", q:"Ergonomia interfejsów oprogramowania — definicja, obszary, typy.",
+    a:"Ergonomia interfejsu to dostosowanie sposobu interakcji do możliwości i ograniczeń percepcyjnych, poznawczych i motorycznych użytkownika, by praca była wydajna, bezpieczna i komfortowa. Obszary: percepcja (czytelność, kontrast, układ), procesy poznawcze (obciążenie pamięci, zrozumiałość), motoryka (dostępność i wielkość elementów). Typy ergonomii: fizyczna, poznawcza, organizacyjna. Przykłady: czytelna typografia, logiczne grupowanie, spójne wzorce, odpowiednie cele klikalne." },
+  { id:"a11y3", topic:"barriers", q:"Użyteczność i dostępność interfejsu oprogramowania.",
+    a:"Użyteczność (usability, ISO 9241-11) — stopień, w jakim określeni użytkownicy realizują cele skutecznie, wydajnie i z satysfakcją w danym kontekście; obejmuje też naukę obsługi i niski poziom błędów. Dostępność (accessibility) — zapewnienie, że z produktu mogą korzystać osoby z różnymi niepełnosprawnościami (wzroku, słuchu, ruchu, poznawczymi). Relacja: dostępność jest warunkiem użyteczności dla wszystkich; produkt dostępny bywa wygodniejszy dla ogółu." },
+  { id:"a11y4", topic:"barriers", q:"Technologie wspomagające osoby z niepełnosprawnościami.",
+    a:"Czytniki ekranu (NVDA, JAWS, VoiceOver) i syntezatory mowy, monitory/linijki brajlowskie, programy powiększające ekran i tryby wysokiego kontrastu, alternatywne klawiatury i przełączniki, sterowanie głosem i wzrokiem (eye-tracking), napisy i transkrypcje, oprogramowanie do komunikacji wspomagającej (AAC). Współpracują z oprogramowaniem przez interfejsy dostępności (np. drzewo dostępności, ARIA)." },
+  { id:"a11y5", topic:"barriers", q:"Wytyczne WCAG 2.1 — zasady, poziomy, weryfikacja.",
+    a:"WCAG 2.1 opiera się na 4 zasadach (POUR): Postrzegalność, Funkcjonalność (operowalność), Zrozumiałość, Solidność (kompatybilność z technologiami). Zawiera wytyczne i kryteria sukcesu na 3 poziomach zgodności: A (minimum), AA (standard wymagany prawnie, np. dla podmiotów publicznych) i AAA (najwyższy). Weryfikacja: narzędzia automatyczne (walidatory, axe, Lighthouse, WAVE), testy manualne (klawiatura, czytnik ekranu) oraz testy z udziałem użytkowników." },
+  { id:"a11y6", topic:"barriers", q:"Metody oceny jakości interfejsu — klasyfikacja, typy.",
+    a:"Podział główny: metody z udziałem użytkowników (empiryczne — testy użyteczności, ankiety, wywiady, obserwacja, eye-tracking) i bez udziału użytkowników (inspekcyjne/analityczne — ocena heurystyczna, wędrówka poznawcza, przegląd ekspercki, listy kontrolne, audyt dostępności). Inny podział: metody formatywne (w trakcie projektowania, diagnoza problemów) vs sumatywne (ocena gotowego produktu, pomiar). Ujęcie ilościowe vs jakościowe." },
+  { id:"a11y7", topic:"barriers", q:"Techniki oceny z udziałem i bez udziału użytkowników.",
+    a:"Z udziałem użytkowników: testy użyteczności (zadaniowe, think-aloud), testy A/B, ankiety (np. SUS), wywiady, obserwacja terenowa, eye-tracking, analiza danych z logów. Bez udziału użytkowników (eksperci/analiza): ocena heurystyczna (heurystyki Nielsena), wędrówka poznawcza (cognitive walkthrough), przegląd ekspercki, audyt względem wytycznych (WCAG), modele predykcyjne (GOMS/KLM)." },
+  { id:"a11y8", topic:"barriers", q:"Metodyka SUS (System Usability Scale).",
+    a:"SUS to standaryzowany kwestionariusz subiektywnej oceny użyteczności: 10 stwierdzeń ocenianych na 5-stopniowej skali Likerta, z naprzemiennym sformułowaniem pozytywnym i negatywnym. Po przeliczeniu (wkład każdego pytania 0–4, suma ×2,5) uzyskuje się wynik 0–100. Wynik ok. 68 to średnia; powyżej oznacza dobrą użyteczność. Zalety: szybki, tani, wiarygodny już dla małych prób, porównywalny między systemami." },
+  { id:"a11y9", topic:"barriers", q:"Ocena heurystyczna — heurystyki Nielsena-Molicha.",
+    a:"Ocena heurystyczna to inspekcja interfejsu przez ekspertów pod kątem 10 zasad Nielsena: 1) widoczność stanu systemu, 2) zgodność z rzeczywistością/językiem użytkownika, 3) kontrola i swoboda użytkownika (cofnij), 4) spójność i standardy, 5) zapobieganie błędom, 6) rozpoznawanie zamiast przypominania, 7) elastyczność i efektywność, 8) estetyka i minimalizm, 9) pomoc w rozpoznaniu i naprawie błędów, 10) pomoc i dokumentacja. Zaleca się 3–5 ewaluatorów." },
+  { id:"a11y10", topic:"barriers", q:"Okulografia — idea, urządzenia, eksperyment, rezultaty.",
+    a:"Okulografia (eye-tracking) bada, gdzie i jak długo patrzy użytkownik. Urządzenia (okulografy) wykorzystują kamery i podczerwień rejestrującą odbicie od rogówki, by śledzić ruch gałek ocznych. Mierzy fiksacje (zatrzymania), sakkady (przeskoki) i ścieżki wzroku. Eksperyment: użytkownik wykonuje zadania na interfejsie, a system zapisuje punkty spojrzeń. Rezultaty: mapy cieplne (heatmapy), ścieżki spojrzeń (gaze plots), czas do pierwszej fiksacji — ujawniają, co przyciąga uwagę i co jest pomijane." },
+
+];
+
+/* ------------------------- QUIZ (test wyboru) ------------------------- */
+const QUIZ = [
+
+  /* === PUB === */
+  { id:"qpub1", topic:"pub", q:"Co oznacza skrót IMRaD w strukturze artykułu naukowego?",
+    options:["Introduction, Methods, Results and Discussion","Index, Method, Reference and Data","Introduction, Models, References and Data","Indexing, Metrics, Review and Diffusion"],
+    correct:0, explain:"IMRaD = Introduction, Methods, Results and Discussion — standardowy układ artykułu empirycznego." },
+  { id:"qpub2", topic:"pub", q:"Indeks Hirscha (h-index) o wartości 10 oznacza, że autor ma:",
+    options:["10 publikacji łącznie","co najmniej 10 publikacji, z których każda ma ≥10 cytowań","10 cytowań łącznie","10 publikacji w czasopismach z IF"],
+    correct:1, explain:"h=10: dziesięć publikacji ma co najmniej po 10 cytowań każda." },
+  { id:"qpub3", topic:"pub", q:"ORCID to przede wszystkim:",
+    options:["wskaźnik cytowalności czasopisma","trwały identyfikator naukowca","baza pełnych tekstów artykułów","system antyplagiatowy"],
+    correct:1, explain:"ORCID to trwały, unikalny identyfikator jednoznacznie odróżniający badacza." },
+  { id:"qpub4", topic:"pub", q:"Impact Factor jest wskaźnikiem powiązanym głównie z bazą:",
+    options:["Scopus","Google Scholar","Web of Science (JCR)","DBLP"],
+    correct:2, explain:"Impact Factor publikowany jest w Journal Citation Reports (Clarivate / Web of Science)." },
+  { id:"qpub5", topic:"pub", q:"Wskaźniki CiteScore, SJR i SNIP są charakterystyczne dla bazy:",
+    options:["Scopus","PubMed","Web of Science","arXiv"],
+    correct:0, explain:"To metryki czasopism dostarczane przez bazę Scopus (Elsevier)." },
+  { id:"qpub6", topic:"pub", q:"Artykuł będący syntezą i krytycznym podsumowaniem dotychczasowych badań to:",
+    options:["original research","artykuł przeglądowy (review)","data paper","letter"],
+    correct:1, explain:"Artykuł przeglądowy podsumowuje i porządkuje istniejący stan wiedzy." },
+
+  /* === EXPLORE === */
+  { id:"qexd1", topic:"explore", q:"W typie SDO_GEOMETRY atrybut SDO_SRID przechowuje:",
+    options:["typ geometrii","układ odniesienia współrzędnych","listę współrzędnych","pole powierzchni"],
+    correct:1, explain:"SDO_SRID identyfikuje przestrzenny układ odniesienia (CRS)." },
+  { id:"qexd2", topic:"explore", q:"Operator SDO_NN w Oracle Spatial służy do:",
+    options:["wyznaczenia pola obiektu","znalezienia najbliższego sąsiada","buforowania geometrii","sprawdzenia poprawności geometrii"],
+    correct:1, explain:"SDO_NN (nearest neighbor) wyszukuje obiekty najbliższe danemu." },
+  { id:"qexd3", topic:"explore", q:"Reguła IQR uznaje obserwację za odstającą, gdy leży poza zakresem:",
+    options:["[Q1 − 1,5·IQR ; Q3 + 1,5·IQR]","[μ − σ ; μ + σ]","[min ; max]","[mediana ± IQR]"],
+    correct:0, explain:"Granice IQR to Q1 − 1,5·IQR oraz Q3 + 1,5·IQR." },
+  { id:"qexd4", topic:"explore", q:"KDE (kernel density estimation) to metoda:",
+    options:["klasyfikacji","parametrycznej regresji","nieparametrycznej estymacji gęstości","redukcji wymiaru"],
+    correct:2, explain:"KDE nieparametrycznie estymuje gęstość przez sumę funkcji jądrowych." },
+  { id:"qexd5", topic:"explore", q:"Kluczowy parametr w estymatorze jądrowym KDE to:",
+    options:["liczba skupień k","szerokość pasma (bandwidth) h","liczba drzew","współczynnik uczenia"],
+    correct:1, explain:"Bandwidth h decyduje o stopniu wygładzenia estymaty." },
+  { id:"qexd6", topic:"explore", q:"MANOVA różni się od ANOVA tym, że:",
+    options:["nie używa testu F","analizuje wiele zmiennych zależnych jednocześnie","dotyczy tylko dwóch grup","nie wymaga hipotezy zerowej"],
+    correct:1, explain:"MANOVA obsługuje wiele zmiennych zależnych naraz, uwzględniając ich korelacje." },
+  { id:"qexd7", topic:"explore", q:"Współczynniki w regresji wielokrotnej najczęściej estymuje się metodą:",
+    options:["największej wiarygodności na drzewach","najmniejszych kwadratów (OLS)","k-średnich","gradientu Newtona dla SVM"],
+    correct:1, explain:"Klasyczna regresja liniowa wykorzystuje metodę najmniejszych kwadratów." },
+  { id:"qexd8", topic:"explore", q:"PCA wyznacza nowe osie (składowe główne) tak, aby:",
+    options:["zmaksymalizować wyjaśnianą wariancję","zminimalizować liczbę obserwacji","oddzielić klasy etykietami","zmaksymalizować entropię"],
+    correct:0, explain:"Składowe główne porządkowane są wg malejącej wyjaśnianej wariancji." },
+  { id:"qexd9", topic:"explore", q:"Która metoda analizy skupień NIE wymaga z góry podanej liczby skupień?",
+    options:["k-średnich","DBSCAN","k-medoids","GMM z ustalonym k"],
+    correct:1, explain:"DBSCAN wykrywa liczbę skupień sam, na podstawie gęstości (eps, minPts)." },
+  { id:"qexd10", topic:"explore", q:"Filtrowanie kolaboracyjne rekomenduje na podstawie:",
+    options:["opisów i cech przedmiotów","podobieństwa użytkowników/przedmiotów wg ocen","reguł eksperckich","metadanych autora"],
+    correct:1, explain:"Collaborative filtering korzysta z wzorców ocen podobnych użytkowników/przedmiotów." },
+  { id:"qexd11", topic:"explore", q:"Do oceny modelu klasyfikacyjnego przy silnie niezbalansowanych klasach najlepiej użyć:",
+    options:["samej dokładności (accuracy)","F1 / AUC-PR / MCC","tylko liczby TP","RMSE"],
+    correct:1, explain:"Przy niezbalansowaniu accuracy myli; lepiej F1, AUC-PR, MCC." },
+  { id:"qexd12", topic:"explore", q:"Która metryka służy ocenie modelu regresyjnego?",
+    options:["F1-score","RMSE","AUC","silhouette"],
+    correct:1, explain:"RMSE (pierwiastek z MSE) mierzy błąd predykcji w regresji." },
+  { id:"qexd13", topic:"explore", q:"Wskaźnik sylwetki (silhouette) ocenia jakość:",
+    options:["regresji","klasyfikacji binarnej","analizy skupień","selekcji cech"],
+    correct:2, explain:"Silhouette mierzy zwartość i separację skupień (wartości od −1 do 1)." },
+  { id:"qexd14", topic:"explore", q:"Karty kontrolne Shewharta są narzędziem:",
+    options:["redukcji wymiaru","statystycznego sterowania procesem (SPC)","rekomendacji","estymacji gęstości"],
+    correct:1, explain:"Karty kontrolne to podstawowe narzędzie SPC do monitorowania stabilności procesu." },
+  { id:"qexd15", topic:"explore", q:"Isolation Forest jest metodą:",
+    options:["detekcji obserwacji odstających","klasteryzacji hierarchicznej","normalizacji danych","walidacji krzyżowej"],
+    correct:0, explain:"Isolation Forest izoluje anomalie losowymi podziałami — wykrywa outliery." },
+
+  /* === MULTI === */
+  { id:"qmcr1", topic:"multi", q:"Głównym celem normalizacji kryteriów jest:",
+    options:["zwiększenie liczby kryteriów","sprowadzenie kryteriów do wspólnej, porównywalnej skali","usunięcie wariantów zdominowanych","obliczenie wartości własnych"],
+    correct:1, explain:"Normalizacja ujednolica skale i kierunki kryteriów, by można je było agregować." },
+  { id:"qmcr2", topic:"multi", q:"Metoda leksykograficzna jest metodą:",
+    options:["kompensacyjną","niekompensacyjną, opartą na hierarchii ważności","losową","wyłącznie dwukryterialną"],
+    correct:1, explain:"Najpierw optymalizuje kryterium najważniejsze; brak kompensacji między kryteriami." },
+  { id:"qmcr3", topic:"multi", q:"W metodzie AHP wagi kryteriów uzyskuje się z:",
+    options:["średniej arytmetycznej ocen","wektora własnego macierzy porównań parami","sumy rang","analizy skupień"],
+    correct:1, explain:"Wagi to znormalizowany wektor własny macierzy porównań parami (skala 1–9)." },
+  { id:"qmcr4", topic:"multi", q:"W AHP spójność ocen uznaje się za akceptowalną, gdy współczynnik spójności CR:",
+    options:["> 1","< 0,1","= 0,5","jest ujemny"],
+    correct:1, explain:"Przyjmuje się CR < 0,1 jako akceptowalny poziom niespójności." },
+  { id:"qmcr5", topic:"multi", q:"Wariant niezdominowany (optymalny w sensie Pareto) to taki, którego:",
+    options:["nie da się poprawić w jednym kryterium bez pogorszenia innego","wszystkie kryteria są maksymalne","suma kryteriów jest najmniejsza","waga jest największa"],
+    correct:0, explain:"Definicja optymalności Pareto: brak poprawy bez pogorszenia w innym kryterium." },
+  { id:"qmcr6", topic:"multi", q:"Metoda Blina opiera się na:",
+    options:["estymacji gęstości","agregacji rankingów/relacji preferencji","regresji liniowej","karcie kontrolnej"],
+    correct:1, explain:"Metoda Blina (teoria wyboru społecznego) agreguje porządki preferencji w ranking zbiorowy." },
+
+  /* === BI === */
+  { id:"qbi1", topic:"bi", q:"Data mart w odróżnieniu od hurtowni danych:",
+    options:["obejmuje całą organizację","jest tematycznym wycinkiem dla jednego obszaru/działu","jest systemem transakcyjnym","nie przechowuje historii"],
+    correct:1, explain:"Data mart to mniejszy, dziedzinowy podzbiór danych dla konkretnego działu." },
+  { id:"qbi2", topic:"bi", q:"W schemacie gwiazdy tabele wymiarów są:",
+    options:["w pełni znormalizowane","zdenormalizowane wokół tabeli faktów","tabelami transakcyjnymi","kostkami OLAP"],
+    correct:1, explain:"Star schema: centralna tabela faktów + zdenormalizowane wymiary." },
+  { id:"qbi3", topic:"bi", q:"Schemat płatka śniegu różni się od gwiazdy tym, że:",
+    options:["nie ma tabeli faktów","wymiary są znormalizowane (rozbite na podtabele)","nie używa kluczy obcych","nie nadaje się do OLAP"],
+    correct:1, explain:"Snowflake normalizuje wymiary, redukując redundancję kosztem dodatkowych złączeń." },
+  { id:"qbi4", topic:"bi", q:"System ERP jest przykładem przetwarzania:",
+    options:["OLAP (analitycznego)","OLTP (transakcyjnego)","wsadowego data mining","strumieniowego ML"],
+    correct:1, explain:"ERP to system transakcyjny OLTP obsługujący bieżące operacje." },
+  { id:"qbi5", topic:"bi", q:"Miara w modelu wymiarowym to:",
+    options:["kontekst opisujący zdarzenie","liczbowa, agregowalna wartość faktu","klucz obcy wymiaru","hierarchia czasu"],
+    correct:1, explain:"Miara to wartość liczbowa faktu (np. kwota sprzedaży), agregowana po wymiarach." },
+  { id:"qbi6", topic:"bi", q:"Litera 'T' w skrócie ETL oznacza etap:",
+    options:["transmisji danych","transformacji (czyszczenie, ujednolicanie)","tabelaryzacji","testowania"],
+    correct:1, explain:"Transform to czyszczenie, konwersja i ujednolicanie danych przed załadowaniem." },
+  { id:"qbi7", topic:"bi", q:"Wymiar wolnozmienny typu 2 (SCD Type 2) obsługuje zmianę przez:",
+    options:["nadpisanie wartości","dodanie nowego wiersza z wersją i datami obowiązywania","usunięcie rekordu","brak reakcji"],
+    correct:1, explain:"SCD2 zachowuje pełną historię, tworząc nowy wersjonowany wiersz." },
+  { id:"qbi8", topic:"bi", q:"Operacja OLAP polegająca na agregacji w górę hierarchii to:",
+    options:["drill-down","roll-up","slice","pivot"],
+    correct:1, explain:"Roll-up agreguje dane na wyższym poziomie hierarchii (np. dzień→miesiąc)." },
+  { id:"qbi9", topic:"bi", q:"Operacja OLAP 'slice' polega na:",
+    options:["obrocie osi raportu","wyborze jednej wartości jednego wymiaru","uszczegółowieniu w dół","agregacji wszystkich miar"],
+    correct:1, explain:"Slice to przekrój kostki przez ustalenie wartości jednego wymiaru." },
+  { id:"qbi10", topic:"bi", q:"Które z narzędzi jest typowym narzędziem BI?",
+    options:["Power BI","Wireshark","Docker","Kubernetes"],
+    correct:0, explain:"Power BI to popularne narzędzie BI do modelowania, dashboardów i raportów." },
+
+  /* === PLSQL === */
+  { id:"qsql1", topic:"plsql", q:"Która sekcja bloku PL/SQL jest obowiązkowa?",
+    options:["DECLARE","BEGIN ... END","EXCEPTION","wszystkie trzy"],
+    correct:1, explain:"Tylko sekcja wykonawcza BEGIN … END jest wymagana; DECLARE i EXCEPTION są opcjonalne." },
+  { id:"qsql2", topic:"plsql", q:"Atrybut kursora %NOTFOUND zwraca PRAWDA, gdy:",
+    options:["kursor jest otwarty","ostatni FETCH nie pobrał wiersza","kursor zwrócił choć jeden wiersz","wystąpił wyjątek"],
+    correct:1, explain:"%NOTFOUND jest TRUE, gdy ostatnia operacja FETCH nie zwróciła wiersza." },
+  { id:"qsql3", topic:"plsql", q:"Pętla kursorowa FOR ... IN cur LOOP automatycznie:",
+    options:["tylko otwiera kursor","otwiera, pobiera wiersze i zamyka kursor","tylko zamyka kursor","wymaga ręcznego FETCH"],
+    correct:1, explain:"Pętla kursorowa sama wykonuje OPEN, FETCH i CLOSE." },
+  { id:"qsql4", topic:"plsql", q:"Który wyjątek zgłaszany jest, gdy SELECT INTO nie zwróci żadnego wiersza?",
+    options:["TOO_MANY_ROWS","NO_DATA_FOUND","ZERO_DIVIDE","DUP_VAL_ON_INDEX"],
+    correct:1, explain:"Brak wiersza w SELECT INTO powoduje wyjątek NO_DATA_FOUND." },
+  { id:"qsql5", topic:"plsql", q:"Główna różnica między funkcją a procedurą w PL/SQL to:",
+    options:["funkcja zwraca wartość przez RETURN","procedura zawsze jest szybsza","funkcja nie może mieć parametrów","procedura nie może modyfikować danych"],
+    correct:0, explain:"Funkcja zwraca wartość (RETURN) i może być użyta w wyrażeniu; procedura wykonuje akcję." },
+  { id:"qsql6", topic:"plsql", q:"Specyfikacja pakietu PL/SQL zawiera:",
+    options:["pełną implementację procedur","publiczny interfejs (deklaracje)","tylko zmienne prywatne","dane tabel"],
+    correct:1, explain:"Specyfikacja deklaruje publiczny interfejs; implementacja jest w ciele pakietu." },
+  { id:"qsql7", topic:"plsql", q:"VARRAY w PL/SQL charakteryzuje się tym, że:",
+    options:["ma nieograniczony rozmiar","ma zadany maksymalny rozmiar","jest zawsze rzadki","nie może być kolumną tabeli"],
+    correct:1, explain:"VARRAY ma z góry ustalony maksymalny rozmiar i jest gęsty." },
+  { id:"qsql8", topic:"plsql", q:"Wyzwalacz typu BEFORE INSERT ... FOR EACH ROW pozwala m.in.:",
+    options:["wykonać się raz na całą instrukcję","modyfikować wartości :NEW przed zapisem wiersza","tworzyć tabele","uruchamiać się przy SELECT"],
+    correct:1, explain:"Trigger wierszowy BEFORE może modyfikować :NEW przed zapisaniem każdego wiersza." },
+  { id:"qsql9", topic:"plsql", q:"Dynamiczny SQL w PL/SQL wykonuje się najczęściej za pomocą:",
+    options:["EXECUTE IMMEDIATE","COMMIT","FETCH","DECLARE"],
+    correct:0, explain:"EXECUTE IMMEDIATE (lub pakiet DBMS_SQL) uruchamia instrukcje budowane w czasie działania." },
+  { id:"qsql10", topic:"plsql", q:"Aby bezpiecznie przekazać wartości do dynamicznego SQL i uniknąć SQL injection, stosuje się:",
+    options:["konkatenację łańcuchów","zmienne wiązane (USING / bind variables)","komentarze","RAISE"],
+    correct:1, explain:"Bind variables (klauzula USING) chronią przed wstrzyknięciem i poprawiają wydajność." },
+
+  /* === PYTHON === */
+  { id:"qpy1", topic:"python", q:"Dekorator w Pythonie to:",
+    options:["typ kolekcji","funkcja opakowująca inną funkcję i zmieniająca jej zachowanie","instrukcja warunkowa","menedżer pakietów"],
+    correct:1, explain:"Dekorator przyjmuje funkcję i zwraca jej zmodyfikowaną wersję (składnia @)." },
+  { id:"qpy2", topic:"python", q:"Domyślną metaklasą w Pythonie jest:",
+    options:["object","type","ABCMeta","class"],
+    correct:1, explain:"type jest domyślną metaklasą — klasy są instancjami type." },
+  { id:"qpy3", topic:"python", q:"Blok finally w konstrukcji try/except wykonuje się:",
+    options:["tylko gdy wystąpi wyjątek","tylko gdy nie ma wyjątku","zawsze, niezależnie od wyjątku","nigdy"],
+    correct:2, explain:"finally wykonuje się zawsze — służy do sprzątania zasobów." },
+  { id:"qpy4", topic:"python", q:"Aby utworzyć klasę abstrakcyjną w Pythonie, używa się:",
+    options:["@staticmethod","abc.ABC i @abstractmethod","@property","__slots__"],
+    correct:1, explain:"Dziedziczenie po abc.ABC + dekorator @abstractmethod tworzy klasę abstrakcyjną." },
+  { id:"qpy5", topic:"python", q:"Metoda specjalna __str__ jest wywoływana m.in. przez:",
+    options:["len()","print() / str()","sorted()","open()"],
+    correct:1, explain:"__str__ zwraca czytelną reprezentację obiektu używaną przez print() i str()." },
+  { id:"qpy6", topic:"python", q:"Wyrażenie lambda x: x*2 to:",
+    options:["definicja klasy","anonimowa funkcja jednowyrażeniowa","pętla","generator nieskończony"],
+    correct:1, explain:"Lambda to anonimowa funkcja zwracająca wynik wyrażenia." },
+  { id:"qpy7", topic:"python", q:"Funkcja map(f, iterable) w Pythonie 3 zwraca:",
+    options:["listę","krotkę","leniwy iterator","słownik"],
+    correct:2, explain:"map() zwraca iterator; aby uzyskać listę, należy użyć list()." },
+  { id:"qpy8", topic:"python", q:"W definicji def f(*args, **kwargs) parametr **kwargs zbiera:",
+    options:["argumenty pozycyjne w krotkę","argumenty nazwane w słownik","tylko jeden argument","wyjątki"],
+    correct:1, explain:"**kwargs gromadzi argumenty nazwane (klucz=wartość) w słownik." },
+  { id:"qpy9", topic:"python", q:"Co zwróci [x*x for x in range(4)]?",
+    options:["[0, 1, 4, 9]","[1, 4, 9, 16]","[0, 1, 2, 3]","generator"],
+    correct:0, explain:"range(4) to 0,1,2,3; ich kwadraty to [0,1,4,9]." },
+  { id:"qpy10", topic:"python", q:"Metoda __init__ służy do:",
+    options:["alokacji pamięci na obiekt","inicjalizacji atrybutów nowo tworzonego obiektu","usuwania obiektu","tworzenia klasy"],
+    correct:1, explain:"__init__ inicjalizuje atrybuty instancji po jej utworzeniu (alokacją zajmuje się __new__)." },
+
+  /* === IOT === */
+  { id:"qiot1", topic:"iot", q:"Mikrokontroler w odróżnieniu od mikroprocesora:",
+    options:["nie ma CPU","integruje CPU, pamięć i peryferia w jednym układzie","ma zawsze większą moc obliczeniową","nie nadaje się do sterowania"],
+    correct:1, explain:"Mikrokontroler to kompletny system na chipie (CPU + pamięć + I/O)." },
+  { id:"qiot2", topic:"iot", q:"Skrót CISC oznacza:",
+    options:["Complex Instruction Set Computer","Compact Integrated System Chip","Controlled Internal Serial Communication","Common Industrial Sensor Card"],
+    correct:0, explain:"CISC = Complex Instruction Set Computer (złożony zestaw instrukcji)." },
+  { id:"qiot3", topic:"iot", q:"Architektura RISC charakteryzuje się:",
+    options:["złożonymi instrukcjami o zmiennej długości","prostymi instrukcjami o stałej długości, zwykle 1 cykl","brakiem rejestrów","brakiem potokowości"],
+    correct:1, explain:"RISC to proste, jednocyklowe instrukcje stałej długości i wiele rejestrów." },
+  { id:"qiot4", topic:"iot", q:"UART realizuje transmisję:",
+    options:["synchroniczną z linią zegara","asynchroniczną (bity startu i stopu)","wyłącznie równoległą","tylko optyczną"],
+    correct:1, explain:"UART jest asynchroniczny — synchronizacja przez bity start/stop, bez wspólnego zegara." },
+  { id:"qiot5", topic:"iot", q:"Pojemność pasożytnicza w układach powoduje przede wszystkim:",
+    options:["wzrost prędkości sygnału","opóźnienia i zniekształcenia sygnałów, ograniczenie częstotliwości","zwiększenie zasięgu radiowego","brak wpływu na pracę"],
+    correct:1, explain:"Tworzy filtr RC: opóźnia zbocza, ogranicza częstotliwość, wywołuje przesłuchy." },
+  { id:"qiot6", topic:"iot", q:"PWM reguluje średnią moc poprzez zmianę:",
+    options:["częstotliwości sygnału","współczynnika wypełnienia (duty cycle)","amplitudy napięcia zasilania","fazy sygnału"],
+    correct:1, explain:"Przy stałej częstotliwości zmienia się duty cycle — i tym samym średnia wartość." },
+  { id:"qiot7", topic:"iot", q:"Aktuator w systemie IoT pełni rolę:",
+    options:["pomiaru wielkości fizycznej","elementu wykonawczego realizującego działanie","magistrali danych","protokołu komunikacji"],
+    correct:1, explain:"Aktuator przekształca sygnał sterujący na działanie fizyczne (ruch, ciepło)." },
+  { id:"qiot8", topic:"iot", q:"I2C i SPI to przykłady:",
+    options:["protokołów warstwy aplikacji w chmurze","magistral/interfejsów komunikacji szeregowej","systemów operacyjnych","języków programowania"],
+    correct:1, explain:"I2C i SPI to popularne szeregowe magistrale/interfejsy komunikacji w systemach wbudowanych." },
+  { id:"qiot9", topic:"iot", q:"Cechą sensora inteligentnego jest:",
+    options:["brak jakiegokolwiek przetwarzania","wbudowane przetwarzanie, kalibracja i komunikacja cyfrowa","praca wyłącznie analogowa","brak interfejsu"],
+    correct:1, explain:"Sensor inteligentny ma mikrokontroler: przetwarza, kalibruje, diagnozuje i komunikuje się cyfrowo." },
+  { id:"qiot10", topic:"iot", q:"USRT w porównaniu z UART:",
+    options:["jest wolniejszy i prostszy","używa wspólnego zegara i osiąga wyższe prędkości","nie przesyła danych","działa tylko bezprzewodowo"],
+    correct:1, explain:"USRT jest synchroniczny (wspólny zegar), co umożliwia wyższe prędkości transmisji." },
+
+  /* === BARRIERS === */
+  { id:"qa11y1", topic:"barriers", q:"Projektowanie uniwersalne zakłada, że produkt:",
+    options:["jest dostępny tylko po adaptacji","jest użyteczny dla jak najszerszego grona bez adaptacji","jest przeznaczony wyłącznie dla osób z niepełnosprawnościami","ignoruje dostępność"],
+    correct:1, explain:"Idea: jeden produkt użyteczny dla wszystkich bez potrzeby specjalnych dostosowań." },
+  { id:"qa11y2", topic:"barriers", q:"WCAG 2.1 opiera się na czterech zasadach (POUR), którymi są:",
+    options:["Postrzegalność, Funkcjonalność, Zrozumiałość, Solidność","Prostota, Otwartość, Uniwersalność, Responsywność","Percepcja, Optymalizacja, Użyteczność, Rozwój","brak zasad — tylko kryteria"],
+    correct:0, explain:"POUR = Perceivable, Operable, Understandable, Robust." },
+  { id:"qa11y3", topic:"barriers", q:"Poziom zgodności WCAG zwykle wymagany prawnie od podmiotów publicznych to:",
+    options:["A","AA","AAA","brak wymogu"],
+    correct:1, explain:"Standardem prawnym (np. dostępność cyfrowa) jest poziom AA." },
+  { id:"qa11y4", topic:"barriers", q:"Użyteczność (usability) wg ISO 9241 obejmuje:",
+    options:["wyłącznie estetykę","skuteczność, wydajność i satysfakcję w danym kontekście","tylko zgodność z WCAG","liczbę linii kodu"],
+    correct:1, explain:"Usability to skuteczność, wydajność i satysfakcja użytkownika w kontekście użycia." },
+  { id:"qa11y5", topic:"barriers", q:"NVDA i JAWS to przykłady:",
+    options:["edytorów kodu","czytników ekranu","przeglądarek","systemów ETL"],
+    correct:1, explain:"To czytniki ekranu wspomagające osoby niewidome i słabowidzące." },
+  { id:"qa11y6", topic:"barriers", q:"Ocena heurystyczna należy do metod:",
+    options:["z udziałem użytkowników","inspekcyjnych (bez udziału użytkowników)","wyłącznie automatycznych","statystycznych"],
+    correct:1, explain:"To metoda inspekcyjna — eksperci oceniają interfejs wg heurystyk." },
+  { id:"qa11y7", topic:"barriers", q:"Kwestionariusz SUS składa się z:",
+    options:["5 pytań otwartych","10 stwierdzeń w skali Likerta","20 zadań praktycznych","1 pytania tak/nie"],
+    correct:1, explain:"SUS to 10 stwierdzeń ocenianych w 5-stopniowej skali Likerta; wynik 0–100." },
+  { id:"qa11y8", topic:"barriers", q:"Liczba heurystyk Nielsena-Molicha wynosi:",
+    options:["5","7","10","15"],
+    correct:2, explain:"To 10 zasad użyteczności Nielsena." },
+  { id:"qa11y9", topic:"barriers", q:"Heurystyka 'widoczność stanu systemu' oznacza, że system powinien:",
+    options:["ukrywać informacje o przetwarzaniu","na bieżąco informować użytkownika, co się dzieje","minimalizować liczbę komunikatów do zera","zawsze wymagać zapamiętywania"],
+    correct:1, explain:"System powinien w rozsądnym czasie informować użytkownika o swoim stanie." },
+  { id:"qa11y10", topic:"barriers", q:"Okulografia (eye-tracking) pozwala uzyskać m.in.:",
+    options:["mapy cieplne i ścieżki spojrzeń","kod źródłowy interfejsu","wartości IF czasopisma","schemat bazy danych"],
+    correct:0, explain:"Eye-tracking generuje heatmapy, gaze plots, dane o fiksacjach i sakkadach." },
+
+];
+
+/* Eksport dla środowiska modułowego (opcjonalny) */
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { TOPICS, DECK, QUIZ };
+}
+
+</script>
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const RING_LEN = 2 * Math.PI * 33;
+
+  const KEY = "obronaDS.v1";
+  function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+  function save(d){ try{ localStorage.setItem(KEY, JSON.stringify(d)); }catch(e){} }
+  let store = load();
+  const known = new Set(store.known || []);
+  function persist(){ store.known = [...known]; save(store); }
+
+  const selected = new Set(TOPICS.map(t=>t.id));
+  let mode = "cards";
+  const S = { list:[], i:0, flipped:false };
+  const Q = { list:[], i:0, score:0, answered:false, wrong:[] };
+  const topicCode = id => (TOPICS.find(t=>t.id===id)||{}).code || "";
+  const topicName = id => (TOPICS.find(t=>t.id===id)||{}).name || id;
+
+  function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1700); }
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+  function show(id){ ["home","cards","quiz","results"].forEach(s=>$("#"+s).classList.toggle("hidden", s!==id)); window.scrollTo({top:0,behavior:"smooth"}); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+  // theme
+  const root=document.documentElement;
+  function applyTheme(t){ root.dataset.theme=t; $("#themeBtn").textContent = t==="light"?"☾":"◐";
+    document.querySelector('meta[name=theme-color]').content = t==="light"?"#EAEDF2":"#14171F"; }
+  applyTheme(store.theme==="light"?"light":"dark");
+  $("#themeBtn").addEventListener("click",()=>{ const t=root.dataset.theme==="light"?"dark":"light"; applyTheme(t); store.theme=t; save(store); });
+
+  // overall ring
+  function updateOverall(){
+    const total=DECK.length, k=DECK.filter(c=>known.has(c.id)).length;
+    const pct = total? Math.round(k/total*100):0;
+    $("#ovKnown").textContent=k; $("#ovTotal").textContent=total; $("#ovPct").textContent=pct+"%";
+    $("#ovRing").style.strokeDasharray=RING_LEN;
+    $("#ovRing").style.strokeDashoffset = RING_LEN*(1-(total?k/total:0));
+    $("#ovMeta").textContent = k===0 ? 'Zaznaczaj „Umiem”, a pierścień się wypełni.'
+      : k===total ? "Komplet opanowany. Powodzenia na obronie!"
+      : (total-k)+" fiszek do powtórki.";
+  }
+
+  // topic chips
+  const byTopic=(arr,id)=>arr.filter(x=>x.topic===id).length;
+  function buildTopics(){
+    const host=$("#topicList"); host.innerHTML="";
+    TOPICS.forEach(t=>{
+      const cards=byTopic(DECK,t.id), q=byTopic(QUIZ,t.id);
+      const km=DECK.filter(c=>c.topic===t.id && known.has(c.id)).length;
+      const b=document.createElement("button");
+      b.className="chip"; b.setAttribute("aria-pressed", selected.has(t.id));
+      b.innerHTML=`<span class="code">${esc(t.code)}</span><span class="nm">${esc(t.name)}</span><span class="ct">${km}/${cards} · ${q}q</span><span class="tick">✓</span>`;
+      b.addEventListener("click",()=>{ selected.has(t.id)?selected.delete(t.id):selected.add(t.id); b.setAttribute("aria-pressed",selected.has(t.id)); refreshSel(); });
+      host.appendChild(b);
+    });
+  }
+  function refreshSel(){ $("#selCount").textContent=`${selected.size} z ${TOPICS.length} działów`; $("#startBtn").disabled=selected.size===0; }
+  $("#selAll").addEventListener("click",()=>{ TOPICS.forEach(t=>selected.add(t.id)); buildTopics(); refreshSel(); });
+  $("#selNone").addEventListener("click",()=>{ selected.clear(); buildTopics(); refreshSel(); });
+
+  function setMode(m){ mode=m; $("#modeCards").setAttribute("aria-pressed",m==="cards"); $("#modeQuiz").setAttribute("aria-pressed",m==="quiz"); }
+  $("#modeCards").addEventListener("click",()=>setMode("cards"));
+  $("#modeQuiz").addEventListener("click",()=>setMode("quiz"));
+  $("#startBtn").addEventListener("click",()=>{ if(selected.size===0) return; mode==="cards"?startCards():startQuiz(); });
+
+  /* ---------- FLASHCARDS ---------- */
+  function startCards(){
+    S.list=shuffle(DECK.filter(c=>selected.has(c.topic)));
+    if(!S.list.length){ toast("Brak fiszek w wybranych działach"); return; }
+    S.i=0; show("cards"); renderCard();
+  }
+  function renderCard(){
+    const c=S.list[S.i];
+    S.flipped=false; $("#cardEl").classList.remove("flip");
+    $("#cardQ").textContent=c.q; $("#cardA").textContent=c.a;
+    $("#cFTag").textContent=topicName(c.topic);
+    $("#cBTag").textContent=topicCode(c.topic)+" · "+(S.i+1)+"/"+S.list.length;
+    $("#cFNum").textContent=(S.i+1)+" / "+S.list.length;
+    $("#cardPos").textContent=(S.i+1)+" / "+S.list.length;
+    $("#cardBar").style.width=((S.i+1)/S.list.length*100)+"%";
+    $("#cardKnownInfo").textContent="Umiem: "+S.list.filter(x=>known.has(x.id)).length;
+    $("#cardPrev").disabled=S.i===0;
+    $("#cardNext").textContent=(S.i===S.list.length-1)?"Podsumuj ›":"Następna ›";
+    $("#cardEl").scrollTop=0;
+  }
+  function flipCard(){ S.flipped=!S.flipped; $("#cardEl").classList.toggle("flip",S.flipped); }
+  function nextCard(){
+    if(S.i<S.list.length-1){ S.i++; renderCard(); }
+    else { toast("Przejrzano "+S.list.length+" fiszek · umiesz "+S.list.filter(x=>known.has(x.id)).length); updateOverall(); buildTopics(); show("home"); }
+  }
+  function prevCard(){ if(S.i>0){ S.i--; renderCard(); } }
+  function judge(isKnown){ const c=S.list[S.i]; isKnown?known.add(c.id):known.delete(c.id); persist(); $("#cardKnownInfo").textContent="Umiem: "+S.list.filter(x=>known.has(x.id)).length; nextCard(); }
+  $("#cardEl").addEventListener("click",flipCard);
+  $("#cardEl").addEventListener("keydown",e=>{ if(e.code==="Space"||e.code==="Enter"){ e.preventDefault(); flipCard(); } });
+  $("#judgeKnow").addEventListener("click",e=>{e.stopPropagation();judge(true);});
+  $("#judgeReview").addEventListener("click",e=>{e.stopPropagation();judge(false);});
+  $("#cardNext").addEventListener("click",nextCard);
+  $("#cardPrev").addEventListener("click",prevCard);
+  $("#cardShuffle").addEventListener("click",()=>{ S.list=shuffle(S.list); S.i=0; renderCard(); toast("Przetasowano"); });
+  $("#cardExit").addEventListener("click",()=>{ updateOverall(); buildTopics(); show("home"); });
+
+  /* ---------- QUIZ ---------- */
+  function buildItem(src){
+    const opts=shuffle(src.options.map((text,idx)=>({text,correct:idx===src.correct})));
+    return { topic:src.topic, q:src.q, explain:src.explain, opts, correctIdx:opts.findIndex(o=>o.correct) };
+  }
+  function startQuiz(){
+    const pool=QUIZ.filter(x=>selected.has(x.topic));
+    if(!pool.length){ toast("Brak pytań quizu w wybranych działach"); return; }
+    Q.list=shuffle(pool).map(buildItem); Q.i=0; Q.score=0; Q.wrong=[]; Q.answered=false;
+    show("quiz"); renderQuiz();
+  }
+  function renderQuiz(){
+    const it=Q.list[Q.i]; Q.answered=false;
+    $("#qTag").textContent=topicName(it.topic);
+    $("#qNum").textContent="PYTANIE "+(Q.i+1)+" / "+Q.list.length;
+    $("#quizQ").textContent=it.q;
+    $("#quizPos").textContent=(Q.i+1)+" / "+Q.list.length;
+    $("#quizScoreInfo").textContent="Wynik: "+Q.score;
+    $("#quizBar").style.width=(Q.i/Q.list.length*100)+"%";
+    const ex=$("#quizExplain"); ex.className="explain hidden";
+    const nx=$("#quizNext"); nx.className="qnext hidden";
+    nx.textContent=(Q.i===Q.list.length-1)?"Zobacz wynik ›":"Dalej ›";
+    const host=$("#quizOpts"); host.innerHTML="";
+    const letters=["A","B","C","D","E","F"];
+    it.opts.forEach((o,idx)=>{
+      const b=document.createElement("button");
+      b.className="opt"; b.innerHTML=`<span class="key">${letters[idx]}</span><span>${esc(o.text)}</span>`;
+      b.addEventListener("click",()=>answer(idx,b));
+      host.appendChild(b);
+    });
+  }
+  function answer(idx,btn){
+    if(Q.answered) return; Q.answered=true;
+    const it=Q.list[Q.i];
+    const nodes=[...$("#quizOpts").children];
+    nodes.forEach(n=>n.setAttribute("disabled","true"));
+    const ok = idx===it.correctIdx;
+    if(ok){ btn.classList.add("correct"); Q.score++; }
+    else { btn.classList.add("wrong"); nodes[it.correctIdx].classList.add("correct"); Q.wrong.push(QUIZ.find(x=>x.q===it.q&&x.topic===it.topic)); }
+    $("#quizScoreInfo").textContent="Wynik: "+Q.score;
+    $("#quizBar").style.width=((Q.i+1)/Q.list.length*100)+"%";
+    const ex=$("#quizExplain");
+    ex.className="explain "+(ok?"ok":"no");
+    ex.innerHTML=`<b>${ok?"Dobrze":"Poprawna odpowiedź"}</b>${esc(it.explain)}`;
+    $("#quizNext").className="qnext";
+  }
+  $("#quizNext").addEventListener("click",()=>{ if(Q.i<Q.list.length-1){ Q.i++; renderQuiz(); } else showResults(); });
+  $("#quizExit").addEventListener("click",()=>{ show("home"); });
+
+  function showResults(){
+    show("results");
+    const total=Q.list.length, sc=Q.score, pct=Math.round(sc/total*100);
+    $("#resScore").textContent=sc; $("#resTotal").textContent=total;
+    $("#resVerdict").textContent = pct>=90?"Świetnie — gotowy na obronę":pct>=70?"Dobrze, jeszcze kilka powtórek":pct>=50?"Solidna podstawa — wróć do słabszych działów":"Czas na więcej fiszek";
+    $("#resSub").textContent = pct+"% poprawnych odpowiedzi";
+    // per-topic breakdown
+    const stat={}; Q.list.forEach((it)=>{ stat[it.topic]=stat[it.topic]||{c:0,t:0}; stat[it.topic].t++; });
+    Q.wrong.forEach(w=>{}); // wrong tracked separately
+    // recompute correct per topic from answered run
+    const correctByTopic={}; Q.list.forEach(it=>{ correctByTopic[it.topic]=correctByTopic[it.topic]||{c:0,t:0}; correctByTopic[it.topic].t++; });
+    // mark corrects: total - wrong per topic
+    const wrongByTopic={}; Q.wrong.forEach(w=>{ wrongByTopic[w.topic]=(wrongByTopic[w.topic]||0)+1; });
+    const host=$("#resBreakdown"); host.innerHTML="";
+    Object.keys(correctByTopic).forEach(tid=>{
+      const t=correctByTopic[tid].t, wrong=wrongByTopic[tid]||0, c=t-wrong, p=Math.round(c/t*100);
+      const row=document.createElement("div"); row.className="brow";
+      row.innerHTML=`<span class="bc">${esc(topicCode(tid))}</span><span class="bn">${esc(topicName(tid))}</span><span class="bb"><i style="width:${p}%"></i></span><span class="bv">${c}/${t}</span>`;
+      host.appendChild(row);
+    });
+    $("#resRetryWrong").style.display = Q.wrong.length? "block":"none";
+    // best score
+    store.bestQuiz = Math.max(store.bestQuiz||0, pct); save(store);
+  }
+  $("#resRetryWrong").addEventListener("click",()=>{
+    const w=Q.wrong.slice(); if(!w.length){ show("home"); return; }
+    Q.list=shuffle(w).map(buildItem); Q.i=0; Q.score=0; Q.wrong=[]; show("quiz"); renderQuiz();
+  });
+  $("#resRestart").addEventListener("click",()=>{ updateOverall(); buildTopics(); show("home"); });
+
+  /* ---------- global keyboard ---------- */
+  document.addEventListener("keydown",e=>{
+    if(!$("#cards").classList.contains("hidden")){
+      if(e.code==="ArrowRight"){ nextCard(); }
+      else if(e.code==="ArrowLeft"){ prevCard(); }
+      else if(e.key==="1"){ judge(false); }
+      else if(e.key==="2"){ judge(true); }
+    } else if(!$("#quiz").classList.contains("hidden")){
+      if((e.code==="Enter"||e.code==="ArrowRight") && Q.answered){ $("#quizNext").click(); }
+      else if(["1","2","3","4"].includes(e.key) && !Q.answered){
+        const n=$("#quizOpts").children[parseInt(e.key)-1]; if(n) n.click();
+      }
+    }
+  });
+
+  /* ---------- init ---------- */
+  buildTopics(); refreshSel(); updateOverall();
+
+  /* ---------- service worker (offline) ---------- */
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>{ navigator.serviceWorker.register("./sw.js").catch(()=>{}); });
+  }
+})();
+</script>
+</body>
+</html>
