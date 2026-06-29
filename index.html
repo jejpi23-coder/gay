@@ -89,13 +89,6 @@
   .selrow button{flex:1;font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--muted);
     background:var(--surface2);border:1px solid var(--border-soft);border-radius:9px;padding:9px;transition:.15s}
   .selrow button:hover{color:var(--text);border-color:var(--accent)}
-  .presetrow{margin-top:12px}
-  .preset{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;
-    font-family:var(--mono);font-size:12px;letter-spacing:.03em;font-weight:600;color:var(--accent-ink);
-    background:var(--accent);border:none;border-radius:9px;padding:12px 14px;cursor:pointer;transition:.15s}
-  .preset:hover{filter:brightness(1.06);transform:translateY(-1px)}
-  .preset .pmeta{font-weight:500;opacity:.85;font-size:11px}
-
   .modes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .mode{display:flex;flex-direction:column;gap:3px;align-items:flex-start;padding:14px;border-radius:12px;
     background:var(--surface2);border:1px solid var(--border-soft);transition:.16s}
@@ -232,12 +225,6 @@
       <div class="head">
         <h2>Wybierz zakres</h2>
         <span class="hint" id="selCount"></span>
-      </div>
-      <div class="presetrow">
-        <button id="selPdf3" class="preset" type="button">
-          <span>📘 TYLKO 3. PDF (zagadnienia ogólne)</span>
-          <span class="pmeta" id="pdf3Count"></span>
-        </button>
       </div>
       <div class="topics" id="topicList"></div>
       <div class="selrow">
@@ -399,23 +386,6 @@
   function refreshSel(){ $("#selCount").textContent=`${selected.size} z ${TOPICS.length} działów`; $("#startBtn").disabled=selected.size===0; }
   $("#selAll").addEventListener("click",()=>{ TOPICS.forEach(t=>selected.add(t.id)); buildTopics(); refreshSel(); });
   $("#selNone").addEventListener("click",()=>{ selected.clear(); buildTopics(); refreshSel(); });
-
-  /* Skrót: tylko zagadnienia z 3. PDF (lista ogólna, dyplomowa) */
-  const PDF3 = ["arch","netbasics","dsp","elec","prog"];
-  function selectOnly(ids){
-    selected.clear();
-    ids.forEach(id=>{ if(TOPICS.find(t=>t.id===id)) selected.add(id); });
-    buildTopics(); refreshSel();
-  }
-  (function(){
-    const n = DECK.filter(c=>PDF3.includes(c.topic)).length;
-    const el=$("#pdf3Count"); if(el) el.textContent = n+" fiszek";
-  })();
-  $("#selPdf3").addEventListener("click",()=>{
-    selectOnly(PDF3);
-    toast("Wybrano tylko 3. PDF — naciśnij Rozpocznij");
-    const sb=$("#startBtn"); if(sb&&sb.scrollIntoView) sb.scrollIntoView({behavior:"smooth",block:"center"});
-  });
 
   function setMode(m){ mode=m; $("#modeCards").setAttribute("aria-pressed",m==="cards"); $("#modeQuiz").setAttribute("aria-pressed",m==="quiz"); }
   $("#modeCards").addEventListener("click",()=>setMode("cards"));

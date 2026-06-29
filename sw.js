@@ -1,5 +1,5 @@
 /* Obrona DS — service worker (offline app shell) */
-const CACHE = "obrona-ds-v2";
+const CACHE = "obrona-ds-v3";
 const ASSETS = [
   "./",
   "./index.html",
